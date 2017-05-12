@@ -1,0 +1,29 @@
+Format is: [Week number] + [TH|FR|SA|SU] + [1|2]
+
+where [1|2] is first or second slot of the day.
+
+Group A Matches on Spring Split 2017:
+
+1TH2 - G2E vs FNC
+1FR1 - MSF vs GIA
+1SA1 - ROC vs G2E
+2TH2 - MSF vs ROC
+2FR2 - GIA vs FNC
+2SA2 - MSF vs G2E
+2SU2 - GIA vs ROC
+3TH2 - FNC vs MSF
+3FR2 - GIA vs G2E
+3SA2 - ROC vs FNC
+
+[Single Round Robin]
+
+8TH2 - FNC vs ROC
+8FR2 - G2E vs MSF
+8SA1 - GIA vs ROC
+9TH2 - GIA vs G2E
+9FR1 - MSF vs ROC
+9SA2 - GIA vs FNC
+10TH2- FNC vs G2E
+10FR2- MSF vs GIA
+10SA2- G2E vs ROC
+10SU2- FNC vs MSF
