@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
 	
@@ -17,14 +18,15 @@ public class Main {
 		FillUpTeamsArrayA();
 		FillUpMatchupsA();
 		FillUpSlotsA();
+		AssignRandomMatchupsToSlots();
 	}
 	
 	public static void FillUpTeamsArrayA(){
-		teams.add(new Team("G2ESPORTS"));
-		teams.add(new Team("MISFITS"));
-		teams.add(new Team("ROCCAT"));
-		teams.add(new Team("FNATIC"));
-		teams.add(new Team("GIANTS"));
+		teams.add(new Team("G2ESPORTS", 50));
+		teams.add(new Team("MISFITS", 30));
+		teams.add(new Team("ROCCAT", 20));
+		teams.add(new Team("FNATIC", 50));
+		teams.add(new Team("GIANTS", 10));
 	}
 	
 	public static void FillUpMatchupsA(){
@@ -34,7 +36,7 @@ public class Main {
 		matchups.add(new Matchup(teams.get(0), teams.get(4)));
 		matchups.add(new Matchup(teams.get(1), teams.get(2)));
 		matchups.add(new Matchup(teams.get(1), teams.get(3)));
-		matchups.add(new Matchup(teams.get(1), teams.get(4)));
+		matchups.add(new Matchup(teams.get(1), teams.get(4)));	
 		matchups.add(new Matchup(teams.get(2), teams.get(3)));
 		matchups.add(new Matchup(teams.get(2), teams.get(4)));
 		matchups.add(new Matchup(teams.get(3), teams.get(4)));
@@ -52,6 +54,16 @@ public class Main {
 		slots.add(new Slot(true, 1, 3));
 		slots.add(new Slot(true, 2, 3));
 		slots.add(new Slot(true, 3, 3));
+	}
+	
+	public static void AssignRandomMatchupsToSlots(){
+		Collections.shuffle(matchups);
+		
+		int index = 0;
+		for(Matchup m: matchups){
+			slots.get(index).AssignMatchup(m);
+			index++;
+		}
 	}
 	
 	

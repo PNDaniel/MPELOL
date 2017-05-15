@@ -1,0 +1,31 @@
+To calculate a matchup's value:
+
+Each team has a number of followers [Team.popularity].
+
+Let Team A have x followers and Team B have y followers:
+
+Let x = 50 and y = 20;
+
+the maximum number of followers of BOTH teams will be 20.
+Hence, we decided to use logarithm function of base 15 to determine the percentage of double followers.
+[Base 15, because we shall ignore any similarity smaller than this]
+
+log15(20) = 1.106, which implies that 10% of those 20 followers are from both teams.
+
+Hence we get the total x+y followers and subtract these 10%:
+
+x+y - 10%*20 = 70-2 = 68; 
+
+
+This will create some fringe cases with intended interactions, where a matchup with
+x = 50 and y = 20 will have [slightly] more estimated viewers than a matchup with x = 40 and y = 40.
+
+
+
+ Rule 2: 
+ 
+ 
+ After a given threshold nonetheless [x+y>=80], there will be a boost of viewers associated with it being an important match.
+Since it shall be an important match, between two above average popular teams, there will be more publicity and the game may make front page
+of streaming websites such as Twitch.
+Hence, another logarithmic bonus will be given to any game that crosses that popularity sum threshold.
