@@ -4,6 +4,7 @@ import java.util.Collections;
 public class Main {
 	
 	private static ArrayList<Slot> slots = new ArrayList<Slot>();
+	private static ArrayList<Schedule> population = new ArrayList<Schedule>();
 	private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
 	private static ArrayList<Team> teams = new ArrayList<Team>();
 	
@@ -18,6 +19,7 @@ public class Main {
 		FillUpTeamsArrayA();
 		FillUpMatchupsA();
 		FillUpSlotsA();
+		FillUpPopulationA();
 		AssignRandomMatchupsToSlots();
 	}
 	
@@ -56,14 +58,16 @@ public class Main {
 		slots.add(new Slot(true, 3, 3));
 	}
 	
+	
+	public static void FillUpPopulationA(){
+		for(int i = 0; i < 10 ; i++)
+			population.add(new Schedule(slots));
+	}
+	
 	public static void AssignRandomMatchupsToSlots(){
-		Collections.shuffle(matchups);
+		for(int i = 0; i < 10 ; i++)
+			population.get(i).AssignRandomMatchups(matchups);
 		
-		int index = 0;
-		for(Matchup m: matchups){
-			slots.get(index).AssignMatchup(m);
-			index++;
-		}
 	}
 	
 	
