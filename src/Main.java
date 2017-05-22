@@ -83,7 +83,6 @@ public class Main {
 	public static void AssignRandomMatchupsToSlots(){
 		for(int i = 0; i < 10 ; i++)
 			population.get(i).AssignRandomMatchups(matchups);
-		
 	}
 
     public static void PrintResult() {
