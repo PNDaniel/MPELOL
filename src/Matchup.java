@@ -19,8 +19,7 @@ public class Matchup {
 		int total_popularity = team1.getPopularity() + team2.getPopularity();
 		int popularity_difference = Math.abs(team1.getPopularity() - team2.getPopularity());
 		int popularity_similarity = total_popularity - popularity_difference;
-		
-		
+
 		// The number of followers of each team have an increasing collision chance
 		if(popularity_similarity > 15)
 			value = total_popularity - (((Math.log(popularity_similarity) / Math.log(15)) - 1) * popularity_similarity);
@@ -33,12 +32,13 @@ public class Matchup {
 		if(total_popularity >= 80){
 			value += Math.log(total_popularity-30);
 		}
-		
 	}
 	
 	public double GetValue(){
 		return this.value;
 	}
-	
-	
+
+    public String PrintMatchup() {
+        return team1.getName() + " VS " + team2.getName();
+    }
 }

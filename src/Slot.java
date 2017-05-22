@@ -5,14 +5,14 @@ public class Slot {
 	
 	private boolean primetime;
 	private int day;
-	private int week;
+    private int week;
 	private double value=0;
 	
 	public Slot(){
 		
 	}
-	
-	
+
+
 	// Set primetime to true if second slot of the day;
 	// day [1,2,3,4] = [TH,FR,SA,SU]
 	public Slot(boolean primetime, int day, int week){
@@ -41,7 +41,75 @@ public class Slot {
 			time_val = (day+week);
 		
 		value = time_val*match_assigned.GetValue();
-		
 	}
-	
+
+    public String PrintSlot()
+    {
+        String printDay = null;
+        String timeDay = "Afternoon";
+        switch (day) {
+            case 1 : printDay = "Thursday";
+                break;
+            case 2 : printDay = "Friday  ";
+                break;
+            case 3 : printDay = "Saturday";
+                break;
+            case 4 : printDay = "Sunday  ";
+                break;
+            default: printDay = "UNKNOWN ";
+                break;
+        }
+        if(primetime) {
+            timeDay = "Evening  ";
+        }
+        if (match_assigned != null){
+            return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> Game: " + match_assigned.PrintMatchup();
+        }
+        else {
+            return "No match assigned";
+        }
+    }
+
+/**
+ * Getters & Setters for Class variables
+ */
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public Matchup getMatch_assigned() {
+        return match_assigned;
+    }
+
+    public void setMatch_assigned(Matchup match_assigned) {
+        this.match_assigned = match_assigned;
+    }
+
+    public boolean isPrimetime() {
+        return primetime;
+    }
+
+    public void setPrimetime(boolean primetime) {
+        this.primetime = primetime;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
+    }
 }

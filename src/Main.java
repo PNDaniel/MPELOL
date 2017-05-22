@@ -7,12 +7,14 @@ public class Main {
 	private static ArrayList<Schedule> population = new ArrayList<Schedule>();
 	private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
 	private static ArrayList<Team> teams = new ArrayList<Team>();
+    private static ArrayList<Team> teamsB = new ArrayList<Team>();
 	
 	public static void main (String[] args){
-		StartGroupA();
+
+        StartGroupA();
+        StartGroupB();
+        PrintResult();
 	}
-	
-	
 	
 	//Consult GroupANotes.txt
 	public static void StartGroupA(){
@@ -22,6 +24,12 @@ public class Main {
 		FillUpPopulationA();
 		AssignRandomMatchupsToSlots();
 	}
+    public static void StartGroupB(){
+        FillUpTeamsArrayB();
+    /*    FillUpMatchupsA();
+        FillUpSlotsA();
+        AssignRandomMatchupsToSlots();*/
+    }
 	
 	public static void FillUpTeamsArrayA(){
 		teams.add(new Team("G2ESPORTS", 50));
@@ -30,6 +38,14 @@ public class Main {
 		teams.add(new Team("FNATIC", 50));
 		teams.add(new Team("GIANTS", 10));
 	}
+
+    public static void FillUpTeamsArrayB(){
+        teamsB.add(new Team("UNICORNS OF LOVE", 50));
+        teamsB.add(new Team("H2K-GAMING", 40));
+        teamsB.add(new Team("SPLYCE", 30));
+        teamsB.add(new Team("VITALIY", 30));
+        teamsB.add(new Team("ORIGEN", 30));
+    }
 	
 	public static void FillUpMatchupsA(){
 		matchups.add(new Matchup(teams.get(0), teams.get(1)));
@@ -69,6 +85,16 @@ public class Main {
 			population.get(i).AssignRandomMatchups(matchups);
 		
 	}
-	
-	
+
+    public static void PrintResult() {
+        int currentWeek = 1;
+        for(Slot slot : slots) {
+            if(currentWeek != slot.getWeek()) {
+                System.out.println("---------------------------------------------------------------");
+                currentWeek++;
+            }
+            System.out.println("\t\tWeek "+ slot.getWeek() +" Game Slots");
+            System.out.println(slot.PrintSlot());
+        }
+    }
 }
