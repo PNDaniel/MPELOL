@@ -4,6 +4,7 @@ import java.util.Collections;
 public class Schedule {
 
 	private ArrayList<Slot> slots = new ArrayList<Slot>();
+	private double scheduleValue = 0.0;
 	
 	public Schedule() {
 
@@ -21,5 +22,16 @@ public class Schedule {
 			this.slots.get(index).AssignMatchup(m);
 			index++;
 		}
+	}
+
+	public double getScheduleValue(){
+		for (int i = 0; i< slots.size();i++){
+			scheduleValue += slots.get(i).getValue();
+		}
+		return 1/scheduleValue;
+	}
+
+	public ArrayList<Slot> getSlots(){
+		return slots;
 	}
 }
