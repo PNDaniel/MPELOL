@@ -25,8 +25,7 @@ public class Matchup {
 			value = total_popularity - (((Math.log(popularity_similarity) / Math.log(15)) - 1) * popularity_similarity);
 		else
 			value = total_popularity;
-		
-		
+
 		// Twitch/Special popularity spike 
 		//TODO Calibrate values
 		if(total_popularity >= 80){

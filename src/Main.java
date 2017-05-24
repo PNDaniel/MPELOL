@@ -6,21 +6,30 @@ public class Main {
 	private static ArrayList<Slot> slots = new ArrayList<Slot>();
 	private static ArrayList<Schedule> population = new ArrayList<Schedule>();
 	private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
-	private static ArrayList<Team> teams = new ArrayList<Team>();
+	private static ArrayList<Team> teamsA = new ArrayList<Team>();
     private static ArrayList<Team> teamsB = new ArrayList<Team>();
 	
 	public static void main (String[] args){
 
         StartGroupA();
       //  StartGroupB();
-
+        Schedule initial_Split = population.get(0);
+        System.out.println("=========================================================================================");
+        System.out.println("\t\t\t\t\t\tInitial Schedule");
+        PrintResult(initial_Split);
+        System.out.println("=========================================================================================");
+        System.out.println("=========================================================================================");
         /* testing PEAST */
 		PEAST peastAlg = new PEAST();
         double current_temperature = 1/Math.log(Math.pow(0.75,-1));
-        peastAlg.GHCM(population.get(0),10,0,current_temperature);
+        Schedule newSchedule = peastAlg.GHCM(population.get(0),20,0,current_temperature);
         /* END of test */
 
-        PrintResult();
+        System.out.println("=========================================================================================");
+        System.out.println("\t\t\t\t\t\tGHCM Schedule");
+        PrintResult(newSchedule);
+        System.out.println("=========================================================================================");
+        System.out.println("=========================================================================================");
 	}
 	
 	//Consult GroupANotes.txt
@@ -28,7 +37,7 @@ public class Main {
 		FillUpTeamsArrayA();
 		FillUpMatchupsA();
 		//FillUpSlotsA();
-        NewFillUpSlotsA();
+        FirstPartFillUpSlotsA();
 		FillUpPopulationA();
         System.out.println("Size of current ["+ 1 +"] population sample: " + population.size());
 		AssignRandomMatchupsToSlots();
@@ -41,11 +50,11 @@ public class Main {
     }
 	
 	public static void FillUpTeamsArrayA(){
-		teams.add(new Team("G2ESPORTS", 50));   // Team 0 - teams.get(0)
-		teams.add(new Team("MISFITS", 30));     // Team 1 - teams.get(1)
-		teams.add(new Team("ROCCAT", 20));      // Team 2 - teams.get(2)
-		teams.add(new Team("FNATIC", 50));      // Team 3 - teams.get(3)
-		teams.add(new Team("GIANTS", 10));      // Team 4 - teams.get(4)
+        teamsA.add(new Team("G2ESPORTS", 50));   // Team 0 - teams.get(0)
+        teamsA.add(new Team("MISFITS", 30));     // Team 1 - teams.get(1)
+        teamsA.add(new Team("ROCCAT", 20));      // Team 2 - teams.get(2)
+        teamsA.add(new Team("FNATIC", 50));      // Team 3 - teams.get(3)
+        teamsA.add(new Team("GIANTS", 10));      // Team 4 - teams.get(4)
 	}
 
     public static void FillUpTeamsArrayB(){
@@ -57,19 +66,19 @@ public class Main {
     }
 
 	public static void FillUpMatchupsA(){
-		matchups.add(new Matchup(teams.get(0), teams.get(1)));
-		matchups.add(new Matchup(teams.get(0), teams.get(2)));
-		matchups.add(new Matchup(teams.get(0), teams.get(3)));
-		matchups.add(new Matchup(teams.get(0), teams.get(4)));
-		matchups.add(new Matchup(teams.get(1), teams.get(2)));
-		matchups.add(new Matchup(teams.get(1), teams.get(3)));
-		matchups.add(new Matchup(teams.get(1), teams.get(4)));	
-		matchups.add(new Matchup(teams.get(2), teams.get(3)));
-		matchups.add(new Matchup(teams.get(2), teams.get(4)));
-		matchups.add(new Matchup(teams.get(3), teams.get(4)));
+		matchups.add(new Matchup(teamsA.get(0), teamsA.get(1)));
+		matchups.add(new Matchup(teamsA.get(0), teamsA.get(2)));
+		matchups.add(new Matchup(teamsA.get(0), teamsA.get(3)));
+		matchups.add(new Matchup(teamsA.get(0), teamsA.get(4)));
+		matchups.add(new Matchup(teamsA.get(1), teamsA.get(2)));
+		matchups.add(new Matchup(teamsA.get(1), teamsA.get(3)));
+		matchups.add(new Matchup(teamsA.get(1), teamsA.get(4)));
+		matchups.add(new Matchup(teamsA.get(2), teamsA.get(3)));
+		matchups.add(new Matchup(teamsA.get(2), teamsA.get(4)));
+		matchups.add(new Matchup(teamsA.get(3), teamsA.get(4)));
 	}
 
-    public static void NewFillUpSlotsA(){
+    public static void FirstPartFillUpSlotsA(){
         slots.add(new Slot(false, 1, 1));
         slots.add(new Slot(true, 1, 1));
         slots.add(new Slot(false, 2, 1));
@@ -110,8 +119,7 @@ public class Main {
 		slots.add(new Slot(true, 2, 3));
 		slots.add(new Slot(true, 3, 3));
 	}
-	
-	
+
 	public static void FillUpPopulationA(){
         int daysPerWeek = 4;
         int weeks = 3;
@@ -130,9 +138,9 @@ public class Main {
 			population.get(i).AssignRandomMatchups(matchups);
 	}
 
-    public static void PrintResult() {
+    public static void PrintResult(Schedule split) {
         int currentWeek = 1;
-        for(Slot slot : population.get(0).getSlots()) {
+        for(Slot slot : split.getSlots()) {
             if(currentWeek != slot.getWeek()) {
                 System.out.println("-------------------------------------------------------------------");
                 currentWeek++;
