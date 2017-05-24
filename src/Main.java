@@ -12,7 +12,14 @@ public class Main {
 	public static void main (String[] args){
 
         StartGroupA();
-        StartGroupB();
+      //  StartGroupB();
+
+        /* testing PEAST */
+		PEAST peastAlg = new PEAST();
+        double current_temperature = 1/Math.log(Math.pow(0.75,-1));
+        peastAlg.GHCM(population.get(0),10,0,current_temperature);
+        /* END of test */
+
         PrintResult();
 	}
 	
@@ -20,8 +27,10 @@ public class Main {
 	public static void StartGroupA(){
 		FillUpTeamsArrayA();
 		FillUpMatchupsA();
-		FillUpSlotsA();
+		//FillUpSlotsA();
+        NewFillUpSlotsA();
 		FillUpPopulationA();
+        System.out.println("Size of current ["+ 1 +"] population sample: " + population.size());
 		AssignRandomMatchupsToSlots();
 	}
     public static void StartGroupB(){
@@ -32,11 +41,11 @@ public class Main {
     }
 	
 	public static void FillUpTeamsArrayA(){
-		teams.add(new Team("G2ESPORTS", 50));
-		teams.add(new Team("MISFITS", 30));
-		teams.add(new Team("ROCCAT", 20));
-		teams.add(new Team("FNATIC", 50));
-		teams.add(new Team("GIANTS", 10));
+		teams.add(new Team("G2ESPORTS", 50));   // Team 0 - teams.get(0)
+		teams.add(new Team("MISFITS", 30));     // Team 1 - teams.get(1)
+		teams.add(new Team("ROCCAT", 20));      // Team 2 - teams.get(2)
+		teams.add(new Team("FNATIC", 50));      // Team 3 - teams.get(3)
+		teams.add(new Team("GIANTS", 10));      // Team 4 - teams.get(4)
 	}
 
     public static void FillUpTeamsArrayB(){
@@ -46,7 +55,7 @@ public class Main {
         teamsB.add(new Team("VITALIY", 30));
         teamsB.add(new Team("ORIGEN", 30));
     }
-	
+
 	public static void FillUpMatchupsA(){
 		matchups.add(new Matchup(teams.get(0), teams.get(1)));
 		matchups.add(new Matchup(teams.get(0), teams.get(2)));
@@ -59,6 +68,34 @@ public class Main {
 		matchups.add(new Matchup(teams.get(2), teams.get(4)));
 		matchups.add(new Matchup(teams.get(3), teams.get(4)));
 	}
+
+    public static void NewFillUpSlotsA(){
+        slots.add(new Slot(false, 1, 1));
+        slots.add(new Slot(true, 1, 1));
+        slots.add(new Slot(false, 2, 1));
+        slots.add(new Slot(true, 2, 1));
+        slots.add(new Slot(false, 3, 1));
+        slots.add(new Slot(true, 3, 1));
+        slots.add(new Slot(false, 4, 1));
+        slots.add(new Slot(true, 4, 1));
+        slots.add(new Slot(false, 1, 2));
+        slots.add(new Slot(true, 1, 2));
+        slots.add(new Slot(false, 2, 2));
+        slots.add(new Slot(true, 2, 2));
+        slots.add(new Slot(false, 3, 2));
+        slots.add(new Slot(true, 3, 2));
+        slots.add(new Slot(false, 4, 2));
+        slots.add(new Slot(true, 4, 2));
+        slots.add(new Slot(false, 1, 3));
+        slots.add(new Slot(true, 1, 3));
+        slots.add(new Slot(false, 2, 3));
+        slots.add(new Slot(true, 2, 3));
+        slots.add(new Slot(false, 3, 3));
+        slots.add(new Slot(true, 3, 3));
+        slots.add(new Slot(false, 4, 3));
+        slots.add(new Slot(true, 4, 3));
+
+    }
 
 	public static void FillUpSlotsA(){
 		//Slot(primetime, day, week)
@@ -76,20 +113,28 @@ public class Main {
 	
 	
 	public static void FillUpPopulationA(){
-		for(int i = 0; i < 10 ; i++)
+        int daysPerWeek = 4;
+        int weeks = 3;
+        int slotsPerDay = 2;
+        int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;
+		for(int i = 0; i < sizeOfPopulation ; i++)
 			population.add(new Schedule(slots));
 	}
 	
 	public static void AssignRandomMatchupsToSlots(){
-		for(int i = 0; i < 10 ; i++)
+        int daysPerWeek = 4;
+        int weeks = 3;
+        int slotsPerDay = 2;
+        int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;
+		for(int i = 0; i < sizeOfPopulation ; i++)
 			population.get(i).AssignRandomMatchups(matchups);
 	}
 
     public static void PrintResult() {
         int currentWeek = 1;
-        for(Slot slot : slots) {
+        for(Slot slot : population.get(0).getSlots()) {
             if(currentWeek != slot.getWeek()) {
-                System.out.println("---------------------------------------------------------------");
+                System.out.println("-------------------------------------------------------------------");
                 currentWeek++;
             }
             System.out.println("\t\tWeek "+ slot.getWeek() +" Game Slots");

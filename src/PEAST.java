@@ -41,6 +41,7 @@ public class PEAST {
     }
 
     public Schedule GHCM(Schedule split, int maximum_sequence_length, int current_round, double current_temperature){
+        ArrayList<Double> everyCost = new ArrayList<Double>();
         int k = current_round/2;
         Matchup object_to_move = randomObject(split); // Set objectToMove = RandomObject(S)
         int target_cell_index = 0;
@@ -54,6 +55,8 @@ public class PEAST {
 
         while(index < maximum_sequence_length){
             double originalIterationCost = copy.getScheduleValue(); // currentCost of the iteration is the full cost(value) of a split
+            iterationInformation( index,  originalIterationCost);
+            everyCost.add(originalIterationCost);
             if (index > 0){
                 // Inner annealing #1
                 if(Math.random() < Math.exp(-1/current_temperature)) {
@@ -96,12 +99,19 @@ public class PEAST {
         // Outer annealing
         if( index == Integer.MAX_VALUE) {
             if (Math.random() < Math.exp(-costDiff / current_temperature)) {
+
                 returnValue =  copy;
             }
         }
         else{
+
             returnValue = last_optimal; // Roll S back to the optimal point in the move sequence.
         }
+        for (int i= 0; i < everyCost.size();i++)
+        {
+            System.out.println("Cost of " + i + " is: " + everyCost.get(i));
+        }
+        System.out.println("Cost of returnValue:" +  returnValue);
         return returnValue;
     }
 
@@ -198,5 +208,14 @@ public class PEAST {
     public double getTemperature(double T0, int m){
         double p = 0.0015;
         return Math.pow((-1/(T0 *Math.log(p))), (1/m));
+    }
+
+    public void iterationInformation(int ci, double cv){
+        System.out.println("Current iteration:" + ci );
+        System.out.println("Current value:" +  cv);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
     }
 }

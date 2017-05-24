@@ -38,8 +38,14 @@ public class Slot {
 			time_val = 0.5*(day+week);
 		else
 			time_val = (day+week);
-		
-		value = time_val*match_assigned.GetValue();
+
+        if(match_assigned != null)
+        {
+            value = time_val*match_assigned.GetValue();
+        }
+        else{
+            value = time_val;
+        }
 	}
 
     public String PrintSlot()
@@ -65,7 +71,8 @@ public class Slot {
             return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> Game: " + match_assigned.PrintMatchup();
         }
         else {
-            return "No match assigned";
+            return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> No match assigned";
+            //return "No match assigned";
         }
     }
 
