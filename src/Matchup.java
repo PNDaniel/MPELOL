@@ -15,6 +15,12 @@ public class Matchup {
 		CalculateValue();
 	}
 	
+	public Matchup(Matchup m){
+		team1 = m.getTeam1();
+		team2 = m.getTeam2();
+		value = m.GetValue();
+	}
+	
 	public void CalculateValue(){
 		int total_popularity = team1.getPopularity() + team2.getPopularity();
 		int popularity_difference = Math.abs(team1.getPopularity() - team2.getPopularity());
@@ -36,8 +42,19 @@ public class Matchup {
 	public double GetValue(){
 		return this.value;
 	}
+	
+	public Team getTeam1(){
+		return team1;
+	}
+	
+	public Team getTeam2(){
+		return team2;
+	}
+	
 
     public String PrintMatchup() {
         return team1.getName() + " VS " + team2.getName();
     }
+    
+   
 }

@@ -19,15 +19,14 @@ public class Slot {
 		this.week = week;
 		this.primetime = primetime;
 	}
-	public void AssignMatchup(Matchup m){
-		match_assigned = m;
-		CalculateValue();
+	
+	public Slot(Slot s){
+		this.day = s.getDay();
+		this.week = s.getWeek();
+		this.primetime = s.isPrimetime();
 	}
 	
-	public void UnAssignMatchup(){
-		match_assigned = null;
-		value = 0;
-	}
+	
 	
 	public void CalculateValue(){
 		
@@ -90,10 +89,29 @@ public class Slot {
     public Matchup getMatch_assigned() {
         return match_assigned;
     }
+    
+    public void AssignMatchup(Matchup m){
+		match_assigned = m;
+		CalculateValue();
+	}
+	
+	public void UnAssignMatchup(){
+		match_assigned = null;
+		value = 0;
+	}
+	
+	public Matchup UnAssignMatchupWithReturn(){
+		Matchup mat = new Matchup(match_assigned);
+		match_assigned = null;
+		value = 0;
+		return mat;
+	}
 
-    public void setMatch_assigned(Matchup match_assigned) {
+    /* DEPRECATED
+     public void setMatch_assigned(Matchup match_assigned) {
+     
         this.match_assigned = match_assigned;
-    }
+    }*/
 
     public boolean isPrimetime() {
         return primetime;
@@ -118,4 +136,5 @@ public class Slot {
     public void setWeek(int week) {
         this.week = week;
     }
+    
 }
