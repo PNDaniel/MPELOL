@@ -1,8 +1,6 @@
-import com.sun.org.apache.xerces.internal.impl.dv.xs.SchemaDateTimeException;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
-
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PEAST {
 
@@ -46,22 +44,20 @@ public class PEAST {
         ArrayList<Double> everyCost = new ArrayList<Double>();
         int k = current_round/2;
         Matchup object_to_move = randomObject(split); // Set objectToMove = RandomObject(S)
-
-        object_to_move.PrintMatchup();
         int target_cell_index = 0;
         Slot target_cell = new Slot();
         int index = 0;
         double last_increment = Double.POSITIVE_INFINITY;
         double costDiff = 0.0;
         Schedule copy = new Schedule(split.getSlots());
-
         Schedule last_optimal = new Schedule(split.getSlots());
         double optimal_cost = 0.0;
-        System.out.println("Initial Schedule Value: " + split.getScheduleValue());
+
+        System.out.println("Initial Schedule Value: " + split.getScheduleValue() +"\n");
 
         while(index < maximum_sequence_length){
             double originalIterationCost = copy.getScheduleValue(); // currentCost of the iteration is the full cost(value) of a split
-       //     System.out.println("Cost of " + index + " is: " + originalIterationCost);
+            System.out.println("Cost of iteration " + index + " is: " + originalIterationCost);
          //   everyCost.add(originalIterationCost);
             if (index > 0){
                 // Inner annealing #1
@@ -72,7 +68,6 @@ public class PEAST {
                     object_to_move = leastFitObject(copy,target_cell_index); // Set objectToMove = LeastFitObject(S,targetCell)
                 }
                 if (object_to_move != null) {
-                    object_to_move.PrintMatchup();
                 }
             }
 
@@ -85,23 +80,27 @@ public class PEAST {
                 target_cell_index = fittestCell(copy, object_to_move); // Set targetCell = FittestCell(S,objectToMove)
                 target_cell = copy.getSlots().get(target_cell_index);
             }
-            target_cell.AssignMatchup(object_to_move); // Move objectToMove to targetCell
-    /*        if (object_to_move == null)
+            Matchup tempMatchup = target_cell.getMatch_assigned();
+            for (int i = 0; i < copy.getSlots().size();i++)
             {
-                System.out.println("Object to move is NULL.");
+                if(object_to_move.equals(copy.getSlots().get(i).getMatch_assigned()))
+                {
+                    copy.getSlots().get(i).AssignMatchup(tempMatchup);
+                    break;
+                }
             }
-            else {
-                System.out.println("Here");
-                object_to_move.PrintMatchup();
-                target_cell.PrintSlot();
-            }*/
+            System.out.println("Slot Match BEFORE RECEIVING Move: "+ object_to_move.PrintMatchup());
+            System.out.println("Slot Cost BEFORE RECEIVING Move: "+ target_cell.getValue() );
+            target_cell.AssignMatchup(object_to_move); // Move objectToMove to targetCell
+            System.out.println("Match Moved: "+ object_to_move.PrintMatchup());
+            System.out.println("Slot Cost After RECEIVING Move: "+ target_cell.getValue() );
             double current_cost = copy.getScheduleValue();
             if(current_cost < optimal_cost)
             {
                 optimal_cost = current_cost;
                 last_optimal = new Schedule(copy.getSlots());
             }
-            else if (current_cost > originalIterationCost)
+            if (current_cost > originalIterationCost)
             {
                 costDiff = current_cost - originalIterationCost;
                 if (costDiff > last_increment){
@@ -113,6 +112,18 @@ public class PEAST {
                 }
             }
             index++;
+            for (int i = 0; i < split.getSlots().size();i++)
+            {
+                if(i != 0)
+                {
+                    if (split.getSlots().get(i).getWeek() != split.getSlots().get(i-1).getWeek())
+                    {
+                        System.out.println("----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------");
+                    }
+                }
+                System.out.println(split.getSlots().get(i).PrintSlot());
+            }
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
         Schedule returnValue = new Schedule();
         // Outer annealing
@@ -124,11 +135,8 @@ public class PEAST {
         else{
             returnValue = last_optimal; // Roll S back to the optimal point in the move sequence.
         }
-  /*      for (int i= 0; i < everyCost.size();i++)
-        {
-            System.out.println("Cost of " + i + " is: " + everyCost.get(i));
-        }*/
-        System.out.println("Cost of returnValue:" +  returnValue.getScheduleValue());
+
+        System.out.println("\nCost of returnValue: " +  returnValue.getScheduleValue());
         SaveToFile(current_round,everyCost,split, returnValue);
         return returnValue;
     }
@@ -205,7 +213,7 @@ public class PEAST {
         boolean checkForNull = false;
         Matchup matchupToReturn = new Matchup();
         while (!checkForNull){
-            int index = (int)(Math.random() * schedule.getSlots().size());
+            int index = new Random().nextInt(schedule.getSlots().size());
             matchupToReturn = schedule.getSlots().get(index).getMatch_assigned();
             if (matchupToReturn != null){
                 checkForNull = true;
@@ -223,7 +231,7 @@ public class PEAST {
 
     private int randomCell(Schedule schedule)
     {
-        return (int)(Math.random() * schedule.getSlots().size());
+        return new Random().nextInt(schedule.getSlots().size());
     }
 
     public double getTemperature(double T0, int m){

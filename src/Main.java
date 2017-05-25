@@ -22,7 +22,7 @@ public class Main {
         /* testing PEAST */
 		PEAST peastAlg = new PEAST();
         double current_temperature = 1/Math.log(Math.pow(0.75,-1));
-        Schedule newSchedule = peastAlg.GHCM(population.get(0),20,0,current_temperature);
+        Schedule newSchedule = peastAlg.GHCM(initial_Split,20,0,current_temperature);
         /* END of test */
 
         System.out.println("=========================================================================================");
@@ -95,14 +95,14 @@ public class Main {
         slots.add(new Slot(true, 3, 2));
         slots.add(new Slot(false, 4, 2));
         slots.add(new Slot(true, 4, 2));
-        slots.add(new Slot(false, 1, 3));
+      /*  slots.add(new Slot(false, 1, 3));
         slots.add(new Slot(true, 1, 3));
         slots.add(new Slot(false, 2, 3));
         slots.add(new Slot(true, 2, 3));
         slots.add(new Slot(false, 3, 3));
         slots.add(new Slot(true, 3, 3));
         slots.add(new Slot(false, 4, 3));
-        slots.add(new Slot(true, 4, 3));
+        slots.add(new Slot(true, 4, 3));*/
 
     }
 
@@ -122,7 +122,7 @@ public class Main {
 
 	public static void FillUpPopulationA(){
         int daysPerWeek = 4;
-        int weeks = 3;
+        int weeks = 2;
         int slotsPerDay = 2;
         int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;
 		for(int i = 0; i < sizeOfPopulation ; i++)
@@ -131,7 +131,7 @@ public class Main {
 	
 	public static void AssignRandomMatchupsToSlots(){
         int daysPerWeek = 4;
-        int weeks = 3;
+        int weeks = 2;
         int slotsPerDay = 2;
         int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;
 		for(int i = 0; i < sizeOfPopulation ; i++)
@@ -140,12 +140,14 @@ public class Main {
 
     public static void PrintResult(Schedule split) {
         int currentWeek = 1;
+        System.out.println("\t\t\t\t\t  Week "+ 1 +" Game Slots");
         for(Slot slot : split.getSlots()) {
             if(currentWeek != slot.getWeek()) {
+                System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
                 System.out.println("-------------------------------------------------------------------");
                 currentWeek++;
             }
-            System.out.println("\t\tWeek "+ slot.getWeek() +" Game Slots");
+
             System.out.println(slot.PrintSlot());
         }
     }
