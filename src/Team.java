@@ -3,6 +3,8 @@ public class Team {
 
 	private String name;
 	private int popularity;
+
+	private int gamesAssigned;
 	
 	public Team(){
 		
@@ -19,5 +21,21 @@ public class Team {
 	
 	public String getName(){
 		return this.name;
+	}
+
+	public void addGameAssigned(){
+		this.gamesAssigned++;
+	}
+
+	public void removeGameAssigned(){
+		this.gamesAssigned--;
+	}
+
+	public int getGamesAssigned() {
+		return gamesAssigned;
+	}
+
+	public void setGamesAssigned(int gamesAssigned) {
+		this.gamesAssigned = gamesAssigned;
 	}
 }

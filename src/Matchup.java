@@ -1,7 +1,7 @@
 
 public class Matchup {
 
-	private Team team1;
+    private Team team1;
 	private Team team2;
 	private double value;
 	
@@ -10,6 +10,8 @@ public class Matchup {
 	}
 	
 	public Matchup(Team a, Team b){
+		a.addGameAssigned();
+		b.addGameAssigned();
 		team1=a;
 		team2=b;
 		CalculateValue();
@@ -50,7 +52,14 @@ public class Matchup {
 	public Team getTeam2(){
 		return team2;
 	}
-	
+
+    public void setTeam1(Team team1) {
+        this.team1 = team1;
+    }
+
+    public void setTeam2(Team team2) {
+        this.team2 = team2;
+    }
 
     public String PrintMatchup() {
         return team1.getName() + " VS " + team2.getName();

@@ -25,9 +25,7 @@ public class Slot {
 		this.week = s.getWeek();
 		this.primetime = s.isPrimetime();
 	}
-	
-	
-	
+
 	public void CalculateValue(){
 		
 		// not taking into account the teams playing
@@ -96,6 +94,8 @@ public class Slot {
 	}
 	
 	public void UnAssignMatchup(){
+      /*  match_assigned.getTeam1().removeGameAssigned();
+        match_assigned.getTeam2().removeGameAssigned();*/
 		match_assigned = null;
 		value = 0;
 	}

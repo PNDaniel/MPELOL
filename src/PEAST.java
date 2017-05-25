@@ -6,7 +6,7 @@ public class PEAST {
 
 	private Matchup in_hand_matchup = null;
 	private int empty_slot = -1;
-	
+
     public PEAST(){  }
 
     public Schedule run(int iteration_limit, int cloning_interval, int shuffling_interval, ArrayList<Schedule> population){
@@ -77,10 +77,15 @@ public class PEAST {
                 	if(in_hand_matchup == null)
                 		object_to_move = leastFitObject(copy,target_cell_index); // Set objectToMove = LeastFitObject(S,targetCell)
                 	else
-                		object_to_move = in_hand_matchup;
+                    {
+                        object_to_move = in_hand_matchup;
+                        in_hand_matchup = null;
+                    }
+
                 }
                 if (object_to_move != null) {
-                	
+
+                    System.out.println("I'm going to move: " + object_to_move.PrintMatchup());
                 }
             }
 
@@ -93,7 +98,7 @@ public class PEAST {
                 target_cell_index = fittestCell(copy, object_to_move); // Set targetCell = FittestCell(S,objectToMove)
                 target_cell = copy.getSlots().get(target_cell_index);
             }
-            
+
             System.out.println("TARGET CELL INDEX: " + target_cell_index);
             //Matchup tempMatchup = target_cell.getMatch_assigned();
             for (int i = 0; i < copy.getSlots().size();i++)
@@ -104,7 +109,7 @@ public class PEAST {
             	if(object_to_move == null)
             		System.out.println("object is null");
             	*/
-            	
+
                 if(object_to_move.equals(copy.getSlots().get(i).getMatch_assigned()))
                 {
                 	if(copy.getSlots().get(target_cell_index).getMatch_assigned()!= null)
@@ -150,7 +155,7 @@ public class PEAST {
                 }
             }
             index++;
-            
+
             split = new Schedule(copy.getSlots());
             for (int i = 0; i < split.getSlots().size();i++)
             {
@@ -178,12 +183,22 @@ public class PEAST {
 
         System.out.println("\nCost of returnValue: " +  returnValue.getScheduleValue());
         SaveToFile(current_round,everyCost,split, returnValue);
+        for (int i = 0; i < returnValue.getSlots().size();i++)
+        {
+            if (returnValue.getSlots().get(i).getMatch_assigned() == null)
+            {
+                System.out.println("Hand : "+ in_hand_matchup.PrintMatchup());
+                returnValue.getSlots().get(i).AssignMatchup(in_hand_matchup);
+                break;
+            }
+        }
+        PrintResult(returnValue,1);
         return returnValue;
     }
 
-    // TEMP discordo 
+    // TEMP discordo
     public Matchup leastFitObject(Schedule split, int target_cell_index){
-        double least_fit_value = split.getScheduleValue(); 
+        double least_fit_value = split.getScheduleValue();
         Slot target_cell = split.getSlots().get(target_cell_index);
         Matchup target_cell_matchup = target_cell.getMatch_assigned();
         Matchup least_fit = target_cell.getMatch_assigned();
@@ -196,7 +211,7 @@ public class PEAST {
 
             if(copy.getSlots().get(i).getMatch_assigned() == null)
             	continue;
-            
+
             Matchup candidate = new Matchup(copy.getSlots().get(i).getMatch_assigned());
             copy.getSlots().get(i).AssignMatchup(target_cell_matchup);
             copy.getSlots().get(target_cell_index).AssignMatchup(candidate);
@@ -212,7 +227,7 @@ public class PEAST {
         return least_fit;
     }
 
-    
+
     // TEMP discordo
     public int fittestCell(Schedule split, Matchup matchup_to_move){
         double fittest_cell_value = split.getScheduleValue();
@@ -233,7 +248,7 @@ public class PEAST {
             if(i == original_cell_index)
                 continue;
 
-            Slot candidate = new Slot(copy.getSlots().get(i)); // TEMP 
+            Slot candidate = new Slot(copy.getSlots().get(i)); // TEMP
 
             copy.getSlots().get(original_cell_index).AssignMatchup(candidate.getMatch_assigned()); // TEMP
             candidate.AssignMatchup(matchup_to_move);
@@ -306,6 +321,20 @@ public class PEAST {
             output.write("===================================================================");
             output.write("===================================================================");
         }catch (IOException e) {
+        }
+    }
+
+    public static void PrintResult(Schedule split, int round_robin) {
+        int currentWeek = 1;
+
+        System.out.println("\t\t\t\t\t  Week "+ 1 +" Game Slots");
+        for(Slot slot : split.getSlots()) {
+            if(currentWeek != slot.getWeek()) {
+                System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
+                System.out.println("-------------------------------------------------------------------");
+                currentWeek++;
+            }
+            System.out.println(slot.PrintSlot());
         }
     }
 
