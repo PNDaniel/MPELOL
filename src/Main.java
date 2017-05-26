@@ -1,3 +1,9 @@
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -7,13 +13,23 @@ public class Main {
 	private static ArrayList<Schedule> population = new ArrayList<Schedule>();
     private static ArrayList<Schedule> populationDR2 = new ArrayList<Schedule>();
 	private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
+    //private static ArrayList<Matchup> matchups2 = new ArrayList<Matchup>();
 	private static ArrayList<Team> teamsA = new ArrayList<Team>();
     private static ArrayList<Team> teamsB = new ArrayList<Team>();
 	
 	public static void main (String[] args){
-    /*    FillUpTeamsArrayA();
-        FillUpTeamsArrayB();
-        FillUpMatchups();*/
+
+     /* In works  
+        FillUpMatchups_DR_Main(teamsA);
+        Collections.reverse(teamsA);
+        FillUpMatchups_DR_Main(teamsA);
+        FillUpMatchups_DR_Main(teamsB);
+        Collections.reverse(teamsB);
+        FillUpMatchups_DR_Main(teamsB);
+        for(int i = 0; i < matchups2.size();i++){
+            System.out.println(matchups2.get(i).PrintMatchup());
+        }*/
+
         StartGroupA_DR_1();
       //  StartGroupB();
         Schedule initial_Split = population.get(0);
@@ -32,45 +48,16 @@ public class Main {
         /* END of test */
 
         System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\tGHCM Schedule");
+     /*   System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
         PrintResult(newSchedule,1);
         System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");
+        System.out.println("=========================================================================================");*/
         System.out.println("Time of Execution of PEAST Algorithm first half of the Double Round-Robin: " + (endTime - startTime) + "ns");
-
-   /*     for (int i= 0; i < teamsA.size(); i++){
-            System.out.println("Games of " + teamsA.get(i).getName() + ": " + teamsA.get(i).getGamesAssigned());
-        }*/
-
-     /*   System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\t\t\t\tWEEK 8-10");
-        System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");
-        StartGroupA_DR_2();
-        Schedule second_half = populationDR2.get(0);
-        System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\tInitial Schedule");
-        PrintResult(second_half,3);
-        System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");
-        startTime = System.nanoTime();
-        peastAlg = new PEAST();
-        endTime = System.nanoTime();
-        current_temperature = 1/Math.log(Math.pow(0.75,-1));
-        newSchedule = peastAlg.GHCM(second_half,20,0,current_temperature);
-
-        System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\tGHCM Schedule");
-        PrintResult(newSchedule,3);
-        System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");
-        System.out.println("Time of Execution of PEAST Algorithm DR2" + (endTime - startTime) + "ns");*/
 	}
 
 	public static void StartGroupA_DR_1(){
 		FillUpTeamsArrayA();
-		FillUpMatchupsA();
+        FillUpMatchups_DR_Main(teamsA);
 		FillUpSlotsA();
         FillUpPopulation(population);
         System.out.println("Size of current ["+ 1 +"] population sample: " + population.size());
@@ -87,6 +74,7 @@ public class Main {
 
     public static void StartGroupB(){
         FillUpTeamsArrayB();
+        FillUpMatchups_DR_Main(teamsB);
     /*    FillUpMatchupsB();
         FillUpSlotsB();
         AssignRandomMatchupsToSlots();*/
@@ -108,18 +96,17 @@ public class Main {
         teamsB.add(new Team("ORIGEN", 30));             // Team 4 - teams.get(4)
     }
 
-	public static void FillUpMatchupsA(){
-		matchups.add(new Matchup(teamsA.get(0), teamsA.get(1)));
-		matchups.add(new Matchup(teamsA.get(0), teamsA.get(2)));
-		matchups.add(new Matchup(teamsA.get(0), teamsA.get(3)));
-		matchups.add(new Matchup(teamsA.get(0), teamsA.get(4)));
-		matchups.add(new Matchup(teamsA.get(1), teamsA.get(2)));
-		matchups.add(new Matchup(teamsA.get(1), teamsA.get(3)));
-		matchups.add(new Matchup(teamsA.get(1), teamsA.get(4)));
-		matchups.add(new Matchup(teamsA.get(2), teamsA.get(3)));
-		matchups.add(new Matchup(teamsA.get(2), teamsA.get(4)));
-		matchups.add(new Matchup(teamsA.get(3), teamsA.get(4)));
-	}
+    public static void FillUpMatchups_DR_Main(ArrayList<Team> teams){
+        int size = 4;
+        int sizeOfJ = 5;
+        for(int i = 0; i < size; i++){
+            for (int j = 1; j < sizeOfJ; j++){
+                //matchups2.add(new Matchup(teams.get(i), teams.get(j+i)));
+                matchups.add(new Matchup(teams.get(i), teams.get(j+i)));
+            }
+            sizeOfJ--;
+        }
+    }
 
     public static void FillUpMatchupsA_DR2(){
         matchups.add(new Matchup(teamsA.get(1), teamsA.get(0)));

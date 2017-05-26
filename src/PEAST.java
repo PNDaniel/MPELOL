@@ -74,17 +74,16 @@ public class PEAST {
                 }
                 else{
                 	System.out.println("[object to move] --> Used LeastFit <--");
-                	if(in_hand_matchup == null)
-                		object_to_move = leastFitObject(copy,target_cell_index); // Set objectToMove = LeastFitObject(S,targetCell)
+                	if(in_hand_matchup == null){
+                        object_to_move = leastFitObject(copy,target_cell_index); // Set objectToMove = LeastFitObject(S,targetCell)
+                    }
                 	else
                     {
                         object_to_move = in_hand_matchup;
                         in_hand_matchup = null;
                     }
-
                 }
                 if (object_to_move != null) {
-
                     System.out.println("I'm going to move: " + object_to_move.PrintMatchup());
                 }
             }
@@ -99,33 +98,12 @@ public class PEAST {
                 target_cell = copy.getSlots().get(target_cell_index);
             }
 
-            System.out.println("TARGET CELL INDEX: " + target_cell_index);
-            //Matchup tempMatchup = target_cell.getMatch_assigned();
             for (int i = 0; i < copy.getSlots().size();i++)
             {
-            	/* DEBUG
-            	if(copy.getSlots().get(i).getMatch_assigned() == null)
-            		System.out.println("match is null");
-            	if(object_to_move == null)
-            		System.out.println("object is null");
-            	*/
-
                 if(object_to_move.equals(copy.getSlots().get(i).getMatch_assigned()))
                 {
                 	if(copy.getSlots().get(target_cell_index).getMatch_assigned()!= null)
                 		in_hand_matchup = copy.getSlots().get(target_cell_index).UnAssignMatchupWithReturn();
-                	// remove object from cell :
-                	/*System.out.println("vai começar");
-                    for(int x = 0; x < copy.getSlots().size(); x++){
-                    	if(copy.getSlots().get(x).getMatch_assigned() == null)
-                    		continue;
-                    	System.out.println("Match : " + copy.getSlots().get(x).getMatch_assigned().PrintMatchup());
-                    	if(copy.getSlots().get(x).getMatch_assigned().equals(object_to_move)){
-                    		System.out.println("\n\nUnassigned object to move : " + object_to_move.getTeam1().getName() + object_to_move.getTeam2().getName() + x);
-                    		System.out.println("Unassigned: " +copy.getSlots().get(x).UnAssignMatchupWithReturn().getTeam1().getName());
-                    		empty_slot = x;
-                    	}
-                    }*/
                 	copy.getSlots().get(i).UnAssignMatchup();
                 	empty_slot = i;
                     copy.getSlots().get(target_cell_index).AssignMatchup(object_to_move);
@@ -133,22 +111,22 @@ public class PEAST {
                 }
             }
             System.out.println("Slot Match BEFORE RECEIVING Move: "+ object_to_move.PrintMatchup());
-            System.out.println("Slot Cost BEFORE RECEIVING Move: "+ target_cell.getValue() );
             target_cell.AssignMatchup(object_to_move); // Move objectToMove to targetCell
             System.out.println("Match Moved: "+ object_to_move.PrintMatchup());
-            System.out.println("Slot Cost After RECEIVING Move: "+ target_cell.getValue() );
             double current_cost = copy.getScheduleValue();
+            split = new Schedule(copy.getSlots());
             if(current_cost < optimal_cost)
             {
                 optimal_cost = current_cost;
                 last_optimal = new Schedule(copy.getSlots());
+                split = last_optimal;
             }
             if (current_cost > originalIterationCost)
             {
                 costDiff = current_cost - originalIterationCost;
                 if (costDiff > last_increment){
                     index = Integer.MAX_VALUE;
-                    break;
+                    break; // This is probably wrong
                 }
                 else{
                     last_increment = costDiff;
@@ -156,7 +134,6 @@ public class PEAST {
             }
             index++;
 
-            split = new Schedule(copy.getSlots());
             for (int i = 0; i < split.getSlots().size();i++)
             {
                 if(i != 0)
@@ -226,7 +203,6 @@ public class PEAST {
 
         return least_fit;
     }
-
 
     // TEMP discordo
     public int fittestCell(Schedule split, Matchup matchup_to_move){

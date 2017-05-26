@@ -65,7 +65,7 @@ public class Slot {
             timeDay = "Evening  ";
         }
         if (match_assigned != null){
-            return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> Game: " + match_assigned.PrintMatchup() + "\t\t Valor do Slot:  " + getValue();
+            return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> Game: " + match_assigned.PrintMatchup() + "\t\tValor do Slot:  " + getValue();
         }
         else {
             return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> No match assigned";
