@@ -28,9 +28,9 @@ public class PEAST {
             current_temperature = getTemperature(current_temperature,maximum_sequence_length);
             //TODO Update simulated annealing framework
 
-            if (round % update_interval == 0) {
+            /*if (round % update_interval == 0) {
                 //TODO Update ADAGEN Framework
-            }
+            }*/
             if (round % shuffling_interval == 0) {
                 //TODO Apply shuffling operators
             }
@@ -43,23 +43,30 @@ public class PEAST {
     }
 
     public Schedule GHCM(Schedule split, int maximum_sequence_length, int current_round, double current_temperature){
+        int previous_target_cell = -1;
         int k = current_round/2;
         Matchup object_to_move = randomObject(split); // Set objectToMove = RandomObject(S)
         int target_cell_index = 0;
         int index = 0;
-        double last_increment = Double.POSITIVE_INFINITY;
+        double last_increment = 420691337;
         double costDiff = 0.0;
         Schedule copy = new Schedule(split);
         Schedule last_optimal = new Schedule(split);
-        double optimal_cost = 0.0;
+        double optimal_cost = 420691337;
         Matchup save_hand = new Matchup();
 
+        double initial_cost_helper =-1;
+
         System.out.println("Initial Schedule Value: " + split.getScheduleValue() +"\n");
+        double current_cost = 0;
+        double previousIterationCost = 0;
+
         Random r = new Random();
-        int firstCell = r.nextInt(split.getSlots().size()-0) + 0;
+        int firstCell = r.nextInt(copy.getSlots().size()-0) + 0;
+        System.out.println("FirstCell: " + firstCell);
         while(index < maximum_sequence_length){
-            double originalIterationCost = copy.getScheduleValue(); // currentCost of the iteration is the full cost(value) of a split
-            System.out.println("Cost of iteration " + index + " is: " + originalIterationCost);
+           /* double previousIterationCost = copy.getScheduleValue(); // currentCost of the iteration is the full cost(value) of a split
+            System.out.println("Cost of iteration " + index + " is: " + previousIterationCost);*/
 
             if (index > 0) {
 
@@ -103,39 +110,52 @@ public class PEAST {
             if(Math.random() < Math.exp(-1 / current_temperature))
             {
                 System.out.println("[Cell to move] --> Used Annealing <--");
-                target_cell_index = randomCell(copy); // Set targetCell = RandomCell(S)
+                target_cell_index = randomCell(copy, previous_target_cell); // Set targetCell = RandomCell(S)
                 System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
             }
             else
             {
                 System.out.println("[Cell to move] --> FittestCell <--");
                 //target_cell_index = fittestCell(copy, object_to_move); // Set targetCell = FittestCell(S,objectToMove)
-                target_cell_index = fittestCell(copy); // Set targetCell = FittestCell(S,objectToMove)
+                target_cell_index = fittestCell(copy, previous_target_cell); // Set targetCell = FittestCell(S,objectToMove)
                 System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
             }
 
-            double current_cost = copy.getScheduleValue();
+            //salta it. 0  // salta it 1
+            if(index != 0 && index != 1)
+                previousIterationCost = current_cost;
+            if(index != 0) {
+                current_cost = copy.getScheduleValue();
+                initial_cost_helper = current_cost;
+            }
+            //
 
-            if(current_cost > optimal_cost)
+            if(current_cost < optimal_cost && index>=1)
             {
                 optimal_cost = current_cost;
                 System.out.println("Optimal value Cost:" + optimal_cost);
-                if(in_hand_matchup != null)
-                    save_hand = in_hand_matchup;
+                if(in_hand_matchup != null){
+                    save_hand = new Matchup(in_hand_matchup);
+                    System.out.println("Save_Hand " + save_hand.PrintMatchup());
+                }
+                else{
+                    save_hand = new Matchup(in_hand_matchup);
+                }
+
                 last_optimal = new Schedule(copy);
             }
-         /*   if (current_cost > originalIterationCost)
+            if (current_cost > previousIterationCost && index >=2)
             {
-                costDiff = current_cost - originalIterationCost;
+                costDiff = current_cost - previousIterationCost;
                 if (costDiff > last_increment){
-                    index = Integer.MAX_VALUE;
+                    index = 420691337;
                     System.out.println("MAX_VALUE");
                     break; // This is probably wrong
                 }
                 else{
                     last_increment = costDiff;
                 }
-            }*/
+            }
             index++;
 
             for (int i = 0; i < copy.getSlots().size();i++)
@@ -154,26 +174,37 @@ public class PEAST {
         Schedule returnValue = new Schedule();
 
         // Outer annealing
-        if( index == Integer.MAX_VALUE) {
+        if( index == 420691337) {
             if (Math.random() < Math.exp(-costDiff / current_temperature)) {
                 returnValue = new Schedule(copy);
+                for (int i = 0; i < returnValue.getSlots().size();i++)
+                {
+                    if (returnValue.getSlots().get(i).getMatch_assigned() == null)
+                    {
+                        if(in_hand_matchup == null)
+                            System.out.println("Hand : "+ in_hand_matchup.PrintMatchup());
+                        returnValue.getSlots().get(i).AssignMatchup(in_hand_matchup);
+                        break;
+                    }
+                }
             }
         }
         else{
             returnValue = new Schedule(last_optimal); // Roll S back to the optimal point in the move sequence.
-        }
-
-        // TODO Se isto estiver aqui vai poderá corromper o valor da solução pq é adicionada mais tarde, será uma corrupção minima? Ou demasiado grande?
-        for (int i = 0; i < returnValue.getSlots().size();i++)
-        {
-            if (returnValue.getSlots().get(i).getMatch_assigned() == null)
+            // TODO Se isto estiver aqui vai poderá corromper o valor da solução pq é adicionada mais tarde, será uma corrupção minima? Ou demasiado grande?
+            for (int i = 0; i < returnValue.getSlots().size();i++)
             {
-                if(save_hand == null)
-                    System.out.println("Hand : "+ save_hand.PrintMatchup());
-                returnValue.getSlots().get(i).AssignMatchup(save_hand);
-                break;
+                if (returnValue.getSlots().get(i).getMatch_assigned() == null)
+                {
+                    if(save_hand == null)
+                        System.out.println("Hand : "+ save_hand.PrintMatchup());
+                    returnValue.getSlots().get(i).AssignMatchup(save_hand);
+                    break;
+                }
             }
         }
+
+
 
     /*    System.out.println("Split       " + split);
         System.out.println("ReturnValue " + returnValue);
@@ -183,12 +214,17 @@ public class PEAST {
         System.out.println("ReturnValue  Match " + returnValue.getSlots().get(0).getMatch_assigned());*/
 
         System.out.println();
-        System.out.println("Initial Schedule Value: " + split.getScheduleValue());
-        System.out.println("Optimal Cost: " + optimal_cost);
-        System.out.println("Cost of returnValue: " +  returnValue.getScheduleValue());
+        System.out.println("Initial Schedule Value [abridged]: " + initial_cost_helper*10000);
+        System.out.println("Optimal Cost: " + optimal_cost*10000);
+        System.out.println("Cost of returnValue: " +  returnValue.getScheduleValue()*10000);
        // SaveToFile(current_round,everyCost,split, returnValue);
 
-        PrintResult(returnValue,1);
+        try {
+            PrintResult(returnValue, 1);
+        }
+        catch(Exception e){
+
+        }
         return returnValue;
     }
 
@@ -224,10 +260,12 @@ public class PEAST {
         return least_fit_index;
     }
 
-    public int fittestCell(Schedule split ){
+    public int fittestCell(Schedule split, int prev_cell ){
         double fittest_cell_value = split.getSlots().get(0).getValue();
         int fittest_cell_index = 0;
         for(int i = 0; i < split.getSlots().size() ;i++){
+            if(i == prev_cell)
+                continue;
             if(fittest_cell_value > split.getSlots().get(i).getValue()){
                 fittest_cell_value = split.getSlots().get(i).getValue();
                 fittest_cell_index = i;
@@ -302,9 +340,13 @@ public class PEAST {
         return randomObject(schedule);
     }
 
-    private int randomCell(Schedule schedule)
+    private int randomCell(Schedule schedule, int prev_cell)
     {
-        return new Random().nextInt(schedule.getSlots().size());
+        int returnval = -1;
+        while(returnval == -1 || returnval == prev_cell)
+            returnval = new Random().nextInt(schedule.getSlots().size());
+
+        return returnval;
     }
 
     public double getTemperature(double T0, int m){
