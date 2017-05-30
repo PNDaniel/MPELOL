@@ -44,7 +44,7 @@ public class Main {
 		PEAST peastAlg = new PEAST();
         long endTime = System.nanoTime();
         double current_temperature = 1/Math.log(Math.pow(0.75,-1));
-        Schedule newSchedule = peastAlg.GHCM(initial_Split,20,0,current_temperature);
+        Schedule newSchedule = peastAlg.GHCM(initial_Split,10,0,current_temperature);
         /* END of test */
 
         System.out.println("=========================================================================================");

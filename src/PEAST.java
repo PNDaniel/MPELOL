@@ -39,169 +39,202 @@ public class PEAST {
             }
             round++;
         }
-
         return best_solution;
     }
 
     public Schedule GHCM(Schedule split, int maximum_sequence_length, int current_round, double current_temperature){
-        ArrayList<Double> everyCost = new ArrayList<Double>();
         int k = current_round/2;
         Matchup object_to_move = randomObject(split); // Set objectToMove = RandomObject(S)
         int target_cell_index = 0;
-        Slot target_cell = new Slot();
         int index = 0;
         double last_increment = Double.POSITIVE_INFINITY;
         double costDiff = 0.0;
-        Schedule copy = new Schedule(split.getSlots());
-        Schedule last_optimal = new Schedule(split.getSlots());
+        Schedule copy = new Schedule(split);
+        Schedule last_optimal = new Schedule(split);
         double optimal_cost = 0.0;
+        Matchup save_hand = new Matchup();
 
         System.out.println("Initial Schedule Value: " + split.getScheduleValue() +"\n");
-
+        Random r = new Random();
+        int firstCell = r.nextInt(split.getSlots().size()-0) + 0;
         while(index < maximum_sequence_length){
             double originalIterationCost = copy.getScheduleValue(); // currentCost of the iteration is the full cost(value) of a split
             System.out.println("Cost of iteration " + index + " is: " + originalIterationCost);
-         //   everyCost.add(originalIterationCost);
-            if (index > 0){
+
+            if (index > 0) {
+
                 // Inner annealing #1
-                if(Math.random() < Math.exp(-1/current_temperature)) {
-                	System.out.println("[object to move] --> Used Annealing <--");
-                	// HERE
-                	if(in_hand_matchup != null){
-                		copy.getSlots().get(empty_slot).AssignMatchup(in_hand_matchup);
-                	}
-                    object_to_move = randomObject(copy, target_cell_index); // Set targetCell = RandomCell(S)
-                }
-                else{
-                	System.out.println("[object to move] --> Used LeastFit <--");
-                	if(in_hand_matchup == null){
-                        object_to_move = leastFitObject(copy,target_cell_index); // Set objectToMove = LeastFitObject(S,targetCell)
-                    }
-                	else
-                    {
+                if (Math.random() < Math.exp(-1 / current_temperature))
+                {
+                    System.out.println("[object to move] --> Used Annealing <--");
+                    if (index == 1) {
+                        in_hand_matchup = copy.getSlots().get(target_cell_index).getMatch_assigned();
+                        object_to_move = copy.getSlots().get(firstCell).getMatch_assigned();
+                        copy.getSlots().get(firstCell).UnAssignMatchup();
+                    } else {
+                        Matchup temp = copy.getSlots().get(target_cell_index).getMatch_assigned();
                         object_to_move = in_hand_matchup;
-                        in_hand_matchup = null;
+                        in_hand_matchup = temp;
+                    }
+                }else
+                {
+                    System.out.println("[object to move] --> Used LeastFit <--");
+                    if (index == 1) {
+                        in_hand_matchup = copy.getSlots().get(target_cell_index).getMatch_assigned();
+                        int matchup_picked_to_move = leastFitObject(copy, target_cell_index); // Set objectToMove = LeastFitObject(S,targetCell)
+                        object_to_move =  copy.getSlots().get(matchup_picked_to_move).getMatch_assigned();
+                        copy.getSlots().get(matchup_picked_to_move).UnAssignMatchup();
+                    } else {
+                        Matchup temp = copy.getSlots().get(target_cell_index).getMatch_assigned();
+                        object_to_move = in_hand_matchup;
+                        in_hand_matchup = temp;
                     }
                 }
-                if (object_to_move != null) {
-                    System.out.println("I'm going to move: " + object_to_move.PrintMatchup());
-                }
+
+                copy.getSlots().get(target_cell_index).AssignMatchup(object_to_move);
+                if(in_hand_matchup != null)
+                    System.out.println("Hand : " + in_hand_matchup.PrintMatchup());
+                if(object_to_move != null)
+                    System.out.println("Object To Move : " + object_to_move.PrintMatchup());
+                System.out.println("Cell that's going to receive this New Match : " + target_cell_index);
             }
 
             // Inner annealing #2
-            if(Math.random() < current_temperature) {
+            if(Math.random() < Math.exp(-1 / current_temperature))
+            {
+                System.out.println("[Cell to move] --> Used Annealing <--");
                 target_cell_index = randomCell(copy); // Set targetCell = RandomCell(S)
-                target_cell = copy.getSlots().get(target_cell_index);
+                System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
             }
-            else {
-                target_cell_index = fittestCell(copy, object_to_move); // Set targetCell = FittestCell(S,objectToMove)
-                target_cell = copy.getSlots().get(target_cell_index);
+            else
+            {
+                System.out.println("[Cell to move] --> FittestCell <--");
+                //target_cell_index = fittestCell(copy, object_to_move); // Set targetCell = FittestCell(S,objectToMove)
+                target_cell_index = fittestCell(copy); // Set targetCell = FittestCell(S,objectToMove)
+                System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
             }
 
-            for (int i = 0; i < copy.getSlots().size();i++)
-            {
-                if(object_to_move.equals(copy.getSlots().get(i).getMatch_assigned()))
-                {
-                	if(copy.getSlots().get(target_cell_index).getMatch_assigned()!= null)
-                		in_hand_matchup = copy.getSlots().get(target_cell_index).UnAssignMatchupWithReturn();
-                	copy.getSlots().get(i).UnAssignMatchup();
-                	empty_slot = i;
-                    copy.getSlots().get(target_cell_index).AssignMatchup(object_to_move);
-                    break;
-                }
-            }
-            System.out.println("Slot Match BEFORE RECEIVING Move: "+ object_to_move.PrintMatchup());
-            target_cell.AssignMatchup(object_to_move); // Move objectToMove to targetCell
-            System.out.println("Match Moved: "+ object_to_move.PrintMatchup());
             double current_cost = copy.getScheduleValue();
-            split = new Schedule(copy.getSlots());
-            if(current_cost < optimal_cost)
+
+            if(current_cost > optimal_cost)
             {
                 optimal_cost = current_cost;
-                last_optimal = new Schedule(copy.getSlots());
-                split = last_optimal;
+                System.out.println("Optimal value Cost:" + optimal_cost);
+                if(in_hand_matchup != null)
+                    save_hand = in_hand_matchup;
+                last_optimal = new Schedule(copy);
             }
-            if (current_cost > originalIterationCost)
+         /*   if (current_cost > originalIterationCost)
             {
                 costDiff = current_cost - originalIterationCost;
                 if (costDiff > last_increment){
                     index = Integer.MAX_VALUE;
+                    System.out.println("MAX_VALUE");
                     break; // This is probably wrong
                 }
                 else{
                     last_increment = costDiff;
                 }
-            }
+            }*/
             index++;
 
-            for (int i = 0; i < split.getSlots().size();i++)
+            for (int i = 0; i < copy.getSlots().size();i++)
             {
                 if(i != 0)
                 {
-                    if (split.getSlots().get(i).getWeek() != split.getSlots().get(i-1).getWeek())
+                    if (copy.getSlots().get(i).getWeek() != copy.getSlots().get(i-1).getWeek())
                     {
                         System.out.println("----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------");
                     }
                 }
-                System.out.println(split.getSlots().get(i).PrintSlot());
+                System.out.println(copy.getSlots().get(i).PrintSlot());
             }
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
         Schedule returnValue = new Schedule();
+
         // Outer annealing
         if( index == Integer.MAX_VALUE) {
             if (Math.random() < Math.exp(-costDiff / current_temperature)) {
-                returnValue =  copy;
+                returnValue = new Schedule(copy);
             }
         }
         else{
-            returnValue = last_optimal; // Roll S back to the optimal point in the move sequence.
+            returnValue = new Schedule(last_optimal); // Roll S back to the optimal point in the move sequence.
         }
 
-        System.out.println("\nCost of returnValue: " +  returnValue.getScheduleValue());
-        SaveToFile(current_round,everyCost,split, returnValue);
+        // TODO Se isto estiver aqui vai poderá corromper o valor da solução pq é adicionada mais tarde, será uma corrupção minima? Ou demasiado grande?
         for (int i = 0; i < returnValue.getSlots().size();i++)
         {
             if (returnValue.getSlots().get(i).getMatch_assigned() == null)
             {
-                System.out.println("Hand : "+ in_hand_matchup.PrintMatchup());
-                returnValue.getSlots().get(i).AssignMatchup(in_hand_matchup);
+                if(save_hand == null)
+                    System.out.println("Hand : "+ save_hand.PrintMatchup());
+                returnValue.getSlots().get(i).AssignMatchup(save_hand);
                 break;
             }
         }
+
+    /*    System.out.println("Split       " + split);
+        System.out.println("ReturnValue " + returnValue);
+        System.out.println("Split       " + split.getSlots());
+        System.out.println("ReturnValue " + returnValue.getSlots());
+        System.out.println("Split        Match " + split.getSlots().get(0).getMatch_assigned());
+        System.out.println("ReturnValue  Match " + returnValue.getSlots().get(0).getMatch_assigned());*/
+
+        System.out.println();
+        System.out.println("Initial Schedule Value: " + split.getScheduleValue());
+        System.out.println("Optimal Cost: " + optimal_cost);
+        System.out.println("Cost of returnValue: " +  returnValue.getScheduleValue());
+       // SaveToFile(current_round,everyCost,split, returnValue);
+
         PrintResult(returnValue,1);
         return returnValue;
     }
 
     // TEMP discordo
-    public Matchup leastFitObject(Schedule split, int target_cell_index){
+    public int leastFitObject(Schedule split, int target_cell_index){
         double least_fit_value = split.getScheduleValue();
         Slot target_cell = split.getSlots().get(target_cell_index);
         Matchup target_cell_matchup = target_cell.getMatch_assigned();
-        Matchup least_fit = target_cell.getMatch_assigned();
-
+        //Matchup least_fit = target_cell.getMatch_assigned();
+        int least_fit_index = 0;
         for(int i = 0; i < split.getSlots().size() ;i++){
-            Schedule copy = new Schedule(split.getSlots());
+            Schedule temp = new Schedule(split);
 
             if(i == target_cell_index)
                 continue;
 
-            if(copy.getSlots().get(i).getMatch_assigned() == null)
+            if(temp.getSlots().get(i).getMatch_assigned() == null)
             	continue;
 
-            Matchup candidate = new Matchup(copy.getSlots().get(i).getMatch_assigned());
-            copy.getSlots().get(i).AssignMatchup(target_cell_matchup);
-            copy.getSlots().get(target_cell_index).AssignMatchup(candidate);
+            Matchup candidate = new Matchup(temp.getSlots().get(i).getMatch_assigned());
+            temp.getSlots().get(i).AssignMatchup(target_cell_matchup);
+            temp.getSlots().get(target_cell_index).AssignMatchup(candidate);
 
-            double schedule_cost = copy.getScheduleValue();
+            double schedule_cost = temp.getScheduleValue();
 
             if(schedule_cost > least_fit_value) {
                 least_fit_value = schedule_cost;
-                least_fit = candidate;
+                //least_fit = candidate;
+                least_fit_index = i;
             }
         }
 
-        return least_fit;
+        return least_fit_index;
+    }
+
+    public int fittestCell(Schedule split ){
+        double fittest_cell_value = split.getSlots().get(0).getValue();
+        int fittest_cell_index = 0;
+        for(int i = 0; i < split.getSlots().size() ;i++){
+            if(fittest_cell_value > split.getSlots().get(i).getValue()){
+                fittest_cell_value = split.getSlots().get(i).getValue();
+                fittest_cell_index = i;
+            }
+        }
+
+        return fittest_cell_index;
     }
 
     // TEMP discordo
@@ -219,9 +252,12 @@ public class PEAST {
         int fittest_cell_index = original_cell_index;
 
         for(int i = 0; i < split.getSlots().size() ;i++){
-            Schedule copy = new Schedule(split.getSlots());
+            Schedule copy = new Schedule(split);
 
             if(i == original_cell_index)
+                continue;
+
+            if(copy.getSlots().get(i).getMatch_assigned() == null)
                 continue;
 
             Slot candidate = new Slot(copy.getSlots().get(i)); // TEMP
@@ -278,7 +314,6 @@ public class PEAST {
 
     public void SaveToFile(int index, ArrayList<Double> everyCost, Schedule originalSplit, Schedule returnValue) {
         try{
-
             BufferedWriter output = null;
             File file = new File("C:\\Users\\Utilizador\\Documents\\Faculdade\\2016-2017\\2Semestre\\MPES\\Projeto\\SavedRuns\\" + "iteration" + index + ".txt");
             output = new BufferedWriter(new FileWriter(file));

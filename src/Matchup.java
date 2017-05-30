@@ -18,9 +18,11 @@ public class Matchup {
 	}
 	
 	public Matchup(Matchup m){
-		team1 = m.getTeam1();
-		team2 = m.getTeam2();
-		value = m.GetValue();
+        if( m != null){
+            this.team1 = new Team (m.getTeam1());
+            this.team2 = new Team (m.getTeam2());
+            this.value = m.GetValue();
+        }
 	}
 	
 	public void CalculateValue(){

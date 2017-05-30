@@ -14,6 +14,15 @@ public class Team {
 		this.name = name;
 		this.popularity = pop;
 	}
+
+	public Team (Team t){
+        if( t != null)
+        {
+            this.name = t.getName();
+            this.popularity = t.getPopularity();
+            this.gamesAssigned = t.getGamesAssigned();
+        }
+	}
 	
 	public int getPopularity(){
 		return this.popularity;

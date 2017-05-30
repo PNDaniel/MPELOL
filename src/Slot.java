@@ -24,6 +24,9 @@ public class Slot {
 		this.day = s.getDay();
 		this.week = s.getWeek();
 		this.primetime = s.isPrimetime();
+        if(s.getMatch_assigned()!= null)
+            this.match_assigned = new Matchup(s.getMatch_assigned());
+        this.value = s.getValue();
 	}
 
 	public void CalculateValue(){
@@ -136,5 +139,4 @@ public class Slot {
     public void setWeek(int week) {
         this.week = week;
     }
-    
 }

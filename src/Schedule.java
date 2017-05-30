@@ -13,6 +13,12 @@ public class Schedule {
 		this.slots = (ArrayList<Slot>) slots.clone();
 	}
 
+    public Schedule (Schedule s){
+        for (int i = 0; i < s.getSlots().size(); i++){
+            this.slots.add(new Slot(s.getSlots().get(i)));
+        }
+    }
+
 	public void AssignRandomMatchups(ArrayList<Matchup> matchups) {
 		Collections.shuffle(matchups);
 
@@ -34,4 +40,11 @@ public class Schedule {
 	public ArrayList<Slot> getSlots(){
 		return slots;
 	}
+
+    public void setSlots(ArrayList<Slot> slots){
+        this.slots = (ArrayList<Slot>) slots.clone();
+    }
+    public void addSlot(Slot slot){
+        slots.add(new Slot (slot));
+    }
 }
