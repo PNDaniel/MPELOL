@@ -33,7 +33,7 @@ public class PEAST {
             }*/
             if (round % shuffling_interval == 0) {
                 //TODO Apply shuffling operators
-                
+
             }
             if (round % cloning_interval == 0) {
                 //TODO Replace the worst schedule with the best one
@@ -97,10 +97,7 @@ public class PEAST {
         int firstCell = r.nextInt(copy.getSlots().size()-0) + 0;
         System.out.println("FirstCell: " + firstCell);
         while(index < maximum_sequence_length){
-           /* double previousIterationCost = copy.getScheduleValue(); // currentCost of the iteration is the full cost(value) of a split
-            System.out.println("Cost of iteration " + index + " is: " + previousIterationCost);*/
-
-            if (index > 0) {
+             if (index > 0) {
 
                 // Inner annealing #1
                 if (Math.random() < Math.exp(-1 / current_temperature))
@@ -148,7 +145,6 @@ public class PEAST {
             else
             {
                 System.out.println("[Cell to move] --> FittestCell <--");
-                //target_cell_index = fittestCell(copy, object_to_move); // Set targetCell = FittestCell(S,objectToMove)
                 target_cell_index = fittestCell(copy, previous_target_cell); // Set targetCell = FittestCell(S,objectToMove)
                 System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
             }
@@ -181,7 +177,7 @@ public class PEAST {
                 costDiff = current_cost - previousIterationCost;
                 if (costDiff > last_increment){
                     index = 420691337;
-                    break; // This is probably wrong
+                    break;
                 }
                 else{
                     last_increment = costDiff;
@@ -236,14 +232,6 @@ public class PEAST {
         }
 
 
-
-    /*    System.out.println("Split       " + split);
-        System.out.println("ReturnValue " + returnValue);
-        System.out.println("Split       " + split.getSlots());
-        System.out.println("ReturnValue " + returnValue.getSlots());
-        System.out.println("Split        Match " + split.getSlots().get(0).getMatch_assigned());
-        System.out.println("ReturnValue  Match " + returnValue.getSlots().get(0).getMatch_assigned());*/
-
         System.out.println();
         System.out.println("Initial Schedule Value [abridged]: " + initial_cost_helper*10000);
         System.out.println("Optimal Cost: " + optimal_cost*10000);
@@ -251,7 +239,8 @@ public class PEAST {
        // SaveToFile(current_round,everyCost,split, returnValue);
 
         try {
-            PrintResult(returnValue, 1);
+            returnValue.PrintSchedule();
+            //PrintResult(returnValue, 1);
         }
         catch(Exception e){
 
@@ -307,7 +296,7 @@ public class PEAST {
     }
 
     // TEMP discordo
-    public int fittestCell(Schedule split, Matchup matchup_to_move){
+/*    public int fittestCell(Schedule split, Matchup matchup_to_move){
         double fittest_cell_value = split.getScheduleValue();
         int original_cell_index = 0;
         for (int i = 0; i < split.getSlots().size(); i++){
@@ -344,7 +333,7 @@ public class PEAST {
 
         return fittest_cell_index;
     }
-
+*/
     /**
      * Support function for getting a random Matchup from a Schedule
      * @param schedule
@@ -361,14 +350,7 @@ public class PEAST {
                 checkForNull = true;
             }
         }
-
         return matchupToReturn;
-    }
-
-    private Matchup randomObject(Schedule schedule, int target_cell_index)
-    {
-        //TODO target_cell is used to assert constraints for the object movement.
-        return randomObject(schedule);
     }
 
     private int randomCell(Schedule schedule, int prev_cell)
@@ -405,20 +387,6 @@ public class PEAST {
             output.write("===================================================================");
             output.write("===================================================================");
         }catch (IOException e) {
-        }
-    }
-
-    public static void PrintResult(Schedule split, int round_robin) {
-        int currentWeek = 1;
-
-        System.out.println("\t\t\t\t\t  Week "+ 1 +" Game Slots");
-        for(Slot slot : split.getSlots()) {
-            if(currentWeek != slot.getWeek()) {
-                System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
-                System.out.println("-------------------------------------------------------------------");
-                currentWeek++;
-            }
-            System.out.println(slot.PrintSlot());
         }
     }
 

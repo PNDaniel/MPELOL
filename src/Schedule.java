@@ -43,13 +43,23 @@ public class Schedule {
 
     public void setSlots(ArrayList<Slot> slots)
 	{
-        //this.slots = (ArrayList<Slot>) slots.clone();
+
 		for (int i = 0; i < slots.size(); i++){
 			this.slots.add(new Slot(slots.get(i)));
 		}
     }
-    public void addSlot(Slot slot){
 
-        slots.add(new Slot (slot));
+    public void PrintSchedule() {
+        int currentWeek = 1;
+
+        System.out.println("\t\t\t\t\t  Week "+ currentWeek +" Game Slots");
+        for(Slot slot : slots) {
+            if(currentWeek != slot.getWeek()) {
+                System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
+                System.out.println("-------------------------------------------------------------------");
+                currentWeek++;
+            }
+            System.out.println(slot.PrintSlot());
+        }
     }
 }
