@@ -10,20 +10,23 @@ public class PEAST {
     public PEAST(){  }
 
     public Schedule run(int iteration_limit, int cloning_interval, int shuffling_interval, ArrayList<Schedule> population){
-        int update_interval = 0; // ADAGEN update interval
+       // int update_interval = 0; // ADAGEN update interval
         int population_size = population.size();
         Schedule best_solution = new Schedule();
         int round = 1;
         double current_temperature = 1/Math.log(Math.pow(0.75,-1)); // T0, initial temperature
         int maximum_sequence_length = iteration_limit;  // maximum sequence length (m) is equal to the maximum number of iterations (t)
-        while(round <= iteration_limit){
-            int index = 1;
-            while(index++ <= population_size){
-               //TODO Apply GHCM to schedule Sindex to get a new schedule
-                best_solution = GHCM(population.get(index), 10, round, current_temperature);
-                if (population.get(index).getScheduleValue() < best_solution.getScheduleValue()){
+        while(round <= iteration_limit)
+        {
+            int index = 0;
+            while(index < population_size)
+            {
+                best_solution = GHCM(population.get(index), 10, round, current_temperature);    // Apply GHCM to schedule Sindex to get a new schedule
+                if (population.get(index).getScheduleValue() < best_solution.getScheduleValue())
+                {
                     best_solution = population.get(index);
                 }
+                index++;
             }
             current_temperature = getTemperature(current_temperature,maximum_sequence_length);
             //TODO Update simulated annealing framework
@@ -35,8 +38,8 @@ public class PEAST {
                 //TODO Apply shuffling operators
 
             }
-            if (round % cloning_interval == 0) {
-                //TODO Replace the worst schedule with the best one
+            if (round % cloning_interval == 0)              // Replace the worst schedule with the best one
+            {
                 double best_value;
                 double worst_value;
                 int worst_value_index = 0;
@@ -48,7 +51,8 @@ public class PEAST {
                     worst_value = population.get(1).getScheduleValue();
                     worst_value_index = 1;
                 }
-                else {
+                else
+                {
                     worst_value = population.get(0).getScheduleValue();
                     worst_value_index = 0;
                     best_value = population.get(1).getScheduleValue();
@@ -170,9 +174,7 @@ public class PEAST {
 				current_cost = copy.getScheduleValue();
 				initial_cost_helper = current_cost;
 			}
-			//
 
-			
 			if (current_cost < optimal_cost && index >= 1) {
 				optimal_cost = current_cost;
 				System.out.println("Optimal value Cost:" + optimal_cost);
@@ -212,7 +214,7 @@ public class PEAST {
 
 		// Outer annealing
 		double randomized = Math.random();
-		
+
 		if (index == 420691337 && randomized < Math.exp(-1 / current_temperature)) { // removed
 																						// costDiff,
 																						// because
@@ -231,9 +233,7 @@ public class PEAST {
 			returnValue = new Schedule(last_optimal); // Roll S back to the
 														// optimal point in the
 														// move sequence.
-			// TODO Se isto estiver aqui vai poderá corromper o valor da
-			// solução pq é adicionada mais tarde, será uma corrupção
-			// minima? Ou demasiado grande?
+
 			for (int i = 0; i < returnValue.getSlots().size(); i++) {
 				if (returnValue.getSlots().get(i).getMatch_assigned() == null) {
 					if (save_hand == null)
@@ -244,205 +244,180 @@ public class PEAST {
 				}
 			}
 		}
-	
 
 
+        System.out.println();
+        System.out.println("Initial Schedule Value [abridged]: " + initial_cost_helper*10000);
+        System.out.println("Optimal Cost: " + optimal_cost*10000);
+        System.out.println("Cost of returnValue: " +  returnValue.getScheduleValue()*10000);
+       // SaveToFile(current_round,everyCost,split, returnValue);
 
-		System.out.println();
-		System.out.println("Initial Schedule Value [abridged]: " + initial_cost_helper * 10000);
-		System.out.println("Optimal Cost: " + optimal_cost * 10000);
-		System.out.println("Cost of returnValue: " + returnValue.getScheduleValue() * 10000);
-		// SaveToFile(current_round,everyCost,split, returnValue);
+        try {
+            returnValue.PrintSchedule();
+        }
+        catch(Exception e){
 
-		try {
-			System.out.println("COPY: |||||||||||  " + copy.getScheduleValue());
-			PrintResult(copy, 1);
-			System.out.println("\nRETURN: |||||||||||  " + returnValue.getScheduleValue());
-			PrintResult(returnValue, 1);
-		} catch (Exception e) {
+        }
+        return returnValue;
+    }
 
-		}
-		return returnValue;
-	}
+    // TEMP discordo
+    public int leastFitObject(Schedule split, int target_cell_index){
+        double least_fit_value = split.getScheduleValue();
+        Slot target_cell = split.getSlots().get(target_cell_index);
+        Matchup target_cell_matchup = target_cell.getMatch_assigned();
+        //Matchup least_fit = target_cell.getMatch_assigned();
+        int least_fit_index = 0;
+        for(int i = 0; i < split.getSlots().size() ;i++){
+            Schedule temp = new Schedule(split);
 
-	// TEMP discordo
-	public int leastFitObject(Schedule split, int target_cell_index) {
-		double least_fit_value = split.getScheduleValue();
-		Slot target_cell = split.getSlots().get(target_cell_index);
-		Matchup target_cell_matchup = target_cell.getMatch_assigned();
-		// Matchup least_fit = target_cell.getMatch_assigned();
-		int least_fit_index = 0;
-		for (int i = 0; i < split.getSlots().size(); i++) {
-			Schedule temp = new Schedule(split);
+            if(i == target_cell_index)
+                continue;
 
-			if (i == target_cell_index)
-				continue;
+            if(temp.getSlots().get(i).getMatch_assigned() == null)
+            	continue;
 
-			if (temp.getSlots().get(i).getMatch_assigned() == null)
-				continue;
+            Matchup candidate = new Matchup(temp.getSlots().get(i).getMatch_assigned());
+            temp.getSlots().get(i).AssignMatchup(target_cell_matchup);
+            temp.getSlots().get(target_cell_index).AssignMatchup(candidate);
 
-			Matchup candidate = new Matchup(temp.getSlots().get(i).getMatch_assigned());
-			temp.getSlots().get(i).AssignMatchup(target_cell_matchup);
-			temp.getSlots().get(target_cell_index).AssignMatchup(candidate);
+            double schedule_cost = temp.getScheduleValue();
 
-			double schedule_cost = temp.getScheduleValue();
+            if(schedule_cost > least_fit_value) {
+                least_fit_value = schedule_cost;
+                //least_fit = candidate;
+                least_fit_index = i;
+            }
+        }
 
-			if (schedule_cost > least_fit_value) {
-				least_fit_value = schedule_cost;
-				// least_fit = candidate;
-				least_fit_index = i;
-			}
-		}
+        return least_fit_index;
+    }
 
-		return least_fit_index;
-	}
+    public int fittestCell(Schedule split, int prev_cell ){
+        double fittest_cell_value = split.getSlots().get(0).getValue();
+        int fittest_cell_index = 0;
+        for(int i = 0; i < split.getSlots().size() ;i++){
+            if(i == prev_cell)
+                continue;
+            if(fittest_cell_value > split.getSlots().get(i).getValue()){
+                fittest_cell_value = split.getSlots().get(i).getValue();
+                fittest_cell_index = i;
+            }
+        }
 
-	public int fittestCell(Schedule split, int prev_cell) {
-		double fittest_cell_value = split.getSlots().get(0).getValue();
-		int fittest_cell_index = 0;
-		for (int i = 0; i < split.getSlots().size(); i++) {
-			if (i == prev_cell)
-				continue;
-			if (fittest_cell_value > split.getSlots().get(i).getValue()) {
-				fittest_cell_value = split.getSlots().get(i).getValue();
-				fittest_cell_index = i;
-			}
-		}
+        return fittest_cell_index;
+    }
 
-		return fittest_cell_index;
-	}
+    // TEMP discordo
+/*    public int fittestCell(Schedule split, Matchup matchup_to_move){
+        double fittest_cell_value = split.getScheduleValue();
+        int original_cell_index = 0;
+        for (int i = 0; i < split.getSlots().size(); i++){
+            if (split.getSlots().get(i).getMatch_assigned().equals(matchup_to_move))
+            {
+                original_cell_index = i;
+                break;
+            }
+        }
 
-	// TEMP discordo
-	public int fittestCell(Schedule split, Matchup matchup_to_move) {
-		double fittest_cell_value = split.getScheduleValue();
-		int original_cell_index = 0;
-		for (int i = 0; i < split.getSlots().size(); i++) {
-			if (split.getSlots().get(i).getMatch_assigned().equals(matchup_to_move)) {
-				original_cell_index = i;
-				break;
-			}
-		}
+        int fittest_cell_index = original_cell_index;
 
-		int fittest_cell_index = original_cell_index;
+        for(int i = 0; i < split.getSlots().size() ;i++){
+            Schedule copy = new Schedule(split);
 
-		for (int i = 0; i < split.getSlots().size(); i++) {
-			Schedule copy = new Schedule(split);
+            if(i == original_cell_index)
+                continue;
 
-			if (i == original_cell_index)
-				continue;
+            if(copy.getSlots().get(i).getMatch_assigned() == null)
+                continue;
 
-			if (copy.getSlots().get(i).getMatch_assigned() == null)
-				continue;
+            Slot candidate = new Slot(copy.getSlots().get(i)); // TEMP
 
-			Slot candidate = new Slot(copy.getSlots().get(i)); // TEMP
+            copy.getSlots().get(original_cell_index).AssignMatchup(candidate.getMatch_assigned()); // TEMP
+            candidate.AssignMatchup(matchup_to_move);
 
-			copy.getSlots().get(original_cell_index).AssignMatchup(candidate.getMatch_assigned()); // TEMP
-			candidate.AssignMatchup(matchup_to_move);
+            double schedule_cost = copy.getScheduleValue();
 
-			double schedule_cost = copy.getScheduleValue();
+            if(schedule_cost < fittest_cell_value) {
+                fittest_cell_value = schedule_cost;
+                fittest_cell_index = i;
+            }
+        }
 
-			if (schedule_cost < fittest_cell_value) {
-				fittest_cell_value = schedule_cost;
-				fittest_cell_index = i;
-			}
-		}
+        return fittest_cell_index;
+    }
+*/
+    /**
+     * Support function for getting a random Matchup from a Schedule
+     * @param schedule
+     * @return Matchup currently selected from the split, it will become the matchup
+     */
+    private Matchup randomObject(Schedule schedule)
+    {
+        boolean checkForNull = false;
+        Matchup matchupToReturn = new Matchup();
+        while (!checkForNull){
+            int index = new Random().nextInt(schedule.getSlots().size());
+            matchupToReturn = schedule.getSlots().get(index).getMatch_assigned();
+            if (matchupToReturn != null){
+                checkForNull = true;
+            }
+        }
+        return matchupToReturn;
+    }
 
-		return fittest_cell_index;
-	}
+    private int randomCell(Schedule schedule, int prev_cell)
+    {
+        int returnval = -1;
+        while(returnval == -1 || returnval == prev_cell)
+            returnval = new Random().nextInt(schedule.getSlots().size());
 
-	/**
-	 * Support function for getting a random Matchup from a Schedule
-	 * 
-	 * @param schedule
-	 * @return Matchup currently selected from the split, it will become the
-	 *         matchup
-	 */
-	private Matchup randomObject(Schedule schedule) {
-		boolean checkForNull = false;
-		Matchup matchupToReturn = new Matchup();
-		while (!checkForNull) {
-			int index = new Random().nextInt(schedule.getSlots().size());
-			matchupToReturn = schedule.getSlots().get(index).getMatch_assigned();
-			if (matchupToReturn != null) {
-				checkForNull = true;
-			}
-		}
+        return returnval;
+    }
 
-		return matchupToReturn;
-	}
+    public double getTemperature(double T0, int m){
+        double p = 0.0015;
+        return Math.pow((-1/(T0 *Math.log(p))), (1/m));
+    }
 
-	private Matchup randomObject(Schedule schedule, int target_cell_index) {
-		// TODO target_cell is used to assert constraints for the object
-		// movement.
-		return randomObject(schedule);
-	}
+    public void SaveToFile(int index, ArrayList<Double> everyCost, Schedule originalSplit, Schedule returnValue) {
+        try{
+            BufferedWriter output = null;
+            File file = new File("C:\\Users\\Utilizador\\Documents\\Faculdade\\2016-2017\\2Semestre\\MPES\\Projeto\\SavedRuns\\" + "iteration" + index + ".txt");
+            output = new BufferedWriter(new FileWriter(file));
+            output.write("===================================================================");
+            output.write("First Schedule");
+            output = PrintSplit(originalSplit,output);
+            output.write("===================================================================");
+            output.write("===================================================================");
+            for (int i = 0; i < everyCost.size(); i++) {
+                output.write("Cost of " + i + " is: " + everyCost.get(i));
+                output.write("Cost of returnValue:" + returnValue.getScheduleValue());
+            }
+            output.write("===================================================================");
+            output.write("GHCM Schedule");
+            output = PrintSplit(returnValue,output);
+            output.write("===================================================================");
+            output.write("===================================================================");
+        }catch (IOException e) {
+        }
+    }
 
-	private int randomCell(Schedule schedule, int prev_cell) {
-		int returnval = -1;
-		while (returnval == -1 || returnval == prev_cell)
-			returnval = new Random().nextInt(schedule.getSlots().size());
+    public BufferedWriter PrintSplit(Schedule split, BufferedWriter output){
+        int currentWeek = 1;
+        try{
+            for(Slot slot : split.getSlots()) {
+                if(currentWeek != slot.getWeek()) {
+                    output.write("-------------------------------------------------------------------");
+                    currentWeek++;
+                }
+                output.write("\t\tWeek "+ slot.getWeek() +" Game Slots");
+                output.write(slot.PrintSlot());
+            }
+        }
+        catch (IOException e){
 
-		return returnval;
-	}
-
-	public double getTemperature(double T0, int m) {
-		double p = 0.0015;
-		return Math.pow((-1 / (T0 * Math.log(p))), (1 / m));
-	}
-
-	public void SaveToFile(int index, ArrayList<Double> everyCost, Schedule originalSplit, Schedule returnValue) {
-		try {
-			BufferedWriter output = null;
-			File file = new File(
-					"C:\\Users\\Utilizador\\Documents\\Faculdade\\2016-2017\\2Semestre\\MPES\\Projeto\\SavedRuns\\"
-							+ "iteration" + index + ".txt");
-			output = new BufferedWriter(new FileWriter(file));
-			output.write("===================================================================");
-			output.write("First Schedule");
-			output = PrintSplit(originalSplit, output);
-			output.write("===================================================================");
-			output.write("===================================================================");
-			for (int i = 0; i < everyCost.size(); i++) {
-				output.write("Cost of " + i + " is: " + everyCost.get(i));
-				output.write("Cost of returnValue:" + returnValue.getScheduleValue());
-			}
-			output.write("===================================================================");
-			output.write("GHCM Schedule");
-			output = PrintSplit(returnValue, output);
-			output.write("===================================================================");
-			output.write("===================================================================");
-		} catch (IOException e) {
-		}
-	}
-
-	public static void PrintResult(Schedule split, int round_robin) {
-		int currentWeek = 1;
-
-		System.out.println("\t\t\t\t\t  Week " + 1 + " Game Slots");
-		for (Slot slot : split.getSlots()) {
-			if (currentWeek != slot.getWeek()) {
-				System.out.println("\t\t\t\t\t  Week " + slot.getWeek() + " Game Slots");
-				System.out.println("-------------------------------------------------------------------");
-				currentWeek++;
-			}
-			System.out.println(slot.PrintSlot());
-		}
-	}
-
-	public BufferedWriter PrintSplit(Schedule split, BufferedWriter output) {
-		int currentWeek = 1;
-		try {
-			for (Slot slot : split.getSlots()) {
-				if (currentWeek != slot.getWeek()) {
-					output.write("-------------------------------------------------------------------");
-					currentWeek++;
-				}
-				output.write("\t\tWeek " + slot.getWeek() + " Game Slots");
-				output.write(slot.PrintSlot());
-			}
-		} catch (IOException e) {
-
-		}
-		return output;
-	}
+        }
+        return output;
+    }
 }

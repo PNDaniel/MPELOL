@@ -51,6 +51,12 @@ public class Schedule {
     }
     public void PrintSchedule() {
         int currentWeek = 1;
+        if ((slots.get(0).getWeek() >= 8) && (slots.get(0).getWeek() <= 10))
+            currentWeek = 8;
+        else if ((slots.get(0).getWeek() >= 4) && (slots.get(0).getWeek() <= 7) )
+            currentWeek = 4;
+        else if ((slots.get(0).getWeek() >= 1) && (slots.get(0).getWeek() <= 3) )
+            currentWeek = 1;
 
         System.out.println("\t\t\t\t\t  Week "+ currentWeek +" Game Slots");
         for(Slot slot : slots) {

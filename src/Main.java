@@ -10,8 +10,13 @@ import java.util.Collections;
 public class Main {
 	
 	//private static ArrayList<Slot> slots = new ArrayList<Slot>();
-	private static ArrayList<Schedule> population = new ArrayList<Schedule>();
-    private static ArrayList<Schedule> populationDR2 = new ArrayList<Schedule>();
+	//private static ArrayList<Schedule> population = new ArrayList<Schedule>();
+    private static ArrayList<Schedule> populationA_DR1 = new ArrayList<Schedule>();
+    private static ArrayList<Schedule> populationA_DR2 = new ArrayList<Schedule>();
+    private static ArrayList<Schedule> populationB_DR1 = new ArrayList<Schedule>();
+    private static ArrayList<Schedule> populationB_DR2 = new ArrayList<Schedule>();
+    private static ArrayList<Schedule> population_SR = new ArrayList<Schedule>();
+
 	//private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
     //private static ArrayList<Matchup> matchups2 = new ArrayList<Matchup>();
 	private static ArrayList<Team> teamsA = new ArrayList<Team>();
@@ -31,43 +36,32 @@ public class Main {
 	
 	public static void main (String[] args){
 
-     // In works
-  /*      FillUpTeamsArrayA();
-        FillUpTeamsArrayB();
-        FillUpMatchups_DR_Main(teamsA);
-        Collections.reverse(teamsA);
-        FillUpMatchups_DR_Main(teamsA);
-        FillUpMatchups_DR_Main(teamsB);
-        Collections.reverse(teamsB);
-        FillUpMatchups_DR_Main(teamsB);*/
- /*       for(int i = 0; i < matchups2.size();i++){
-            System.out.println(matchups2.get(i).PrintMatchup());
-        }
-*/
-        //StartGroupA_DR_1();
-        StartGroups();
-      //  StartGroupB();
-        Schedule initial_Split = population.get(0);
+        StartGroups(); // Starts every Round-Robin for both Groups
+        long totalExecutionTime = 0;
+
         System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\tInitial Schedule");
-        initial_Split.PrintSchedule();
+        System.out.println("\t\t\t\t\t\tInitial Schedule for Group A First Round");
+        Schedule initial_SplitA_DR1 = populationA_DR1.get(0);
+        initial_SplitA_DR1.PrintSchedule();
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
         
-        /* testing PEAST */
+        /* testing GHCM */
         long startTime = System.nanoTime();
 		PEAST peastAlg = new PEAST();
         long endTime = System.nanoTime();
-        double current_temperature = 1/Math.log(Math.pow(0.75,-1));
-        Schedule newSchedule = peastAlg.GHCM(initial_Split,10,0,current_temperature);
+        //double current_temperature = 1/Math.log(Math.pow(0.75,-1));
+        //Schedule resultScheduleA_DR2 = peastAlg.GHCM(initial_SplitA_DR1,10,0,current_temperature);
+        Schedule resultScheduleB_DR1 = peastAlg.run(20, 5, 5,populationB_DR1);
         /* END of test */
 
-/*        System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
-        newSchedule.PrintSchedule();
         System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");*/
-        System.out.println("Time of Execution of PEAST Algorithm first half of the Double Round-Robin: " + (endTime - startTime) + "ns");
+        System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
+        resultScheduleB_DR1.PrintSchedule();
+        System.out.println("=========================================================================================");
+        System.out.println("=========================================================================================");
+        System.out.println("Time of Execution of PEAST Algorithm for Group A's first half of its Double Round-Robin: " + (endTime - startTime) + "ns");
+        totalExecutionTime += (endTime - startTime);
 	}
 
     public static void StartGroups(){
@@ -79,9 +73,9 @@ public class Main {
         FillUpMatchups_DR_Main(teamsA, matchupsA_DR1);
         Collections.reverse(teamsA);
         FillUpMatchups_DR_Main(teamsA, matchupsA_DR2);
-        FillUpMatchups_DR_Main(teamsA, matchupsB_DR1);
+        FillUpMatchups_DR_Main(teamsB, matchupsB_DR1);
         Collections.reverse(teamsB);
-        FillUpMatchups_DR_Main(teamsA, matchupsB_DR2);
+        FillUpMatchups_DR_Main(teamsB, matchupsB_DR2);
 //        FillUpMatchups_DR_Main(teamsA, matchups_SR);
 
         // Prepare Slots
@@ -92,19 +86,19 @@ public class Main {
 //        FillUpSlots_SR();
 
         // Fill Population with Slots
-        FillUpPopulation(population, slotsA_DR1);
- /*       FillUpPopulation(population, slotsA_DR2);
-        FillUpPopulation(population, slotsB_DR1);
-        FillUpPopulation(population, slotsB_DR2);
-//        FillUpPopulation(population, slots_SR);
+        FillUpPopulation(populationA_DR1, slotsA_DR1);
+        FillUpPopulation(populationA_DR2, slotsA_DR2);
+        FillUpPopulation(populationB_DR1, slotsB_DR1);
+        FillUpPopulation(populationB_DR2, slotsB_DR2);
+//        FillUpPopulation(population_SR, slots_SR);
 
-  */      // Fill Population slots with Matchups
-        AssignRandomMatchupsToSlots(population, matchupsA_DR1);
-  /*      AssignRandomMatchupsToSlots(population, matchupsA_DR2);
-        AssignRandomMatchupsToSlots(population, matchupsB_DR1);
-        AssignRandomMatchupsToSlots(population, matchupsB_DR2);
-//        AssignRandomMatchupsToSlots(population, matchups_SR);
-*/
+        // Fill Population slots with Matchups
+        AssignRandomMatchupsToSlots(populationA_DR1, matchupsA_DR1);
+        AssignRandomMatchupsToSlots(populationA_DR2, matchupsA_DR2);
+        AssignRandomMatchupsToSlots(populationB_DR1, matchupsB_DR1);
+        AssignRandomMatchupsToSlots(populationB_DR2, matchupsB_DR2);
+//        AssignRandomMatchupsToSlots(population_SR, matchups_SR);
+
     }
 
 	public static void FillUpTeamsArrayA(){
@@ -191,19 +185,21 @@ public class Main {
     }
 
 	public static void FillUpPopulation(ArrayList<Schedule> _population, ArrayList<Slot> slots){
-        int daysPerWeek = 4;
+        /*int daysPerWeek = 4;
         int weeks = 3;
         int slotsPerDay = 2;
-        int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;
+        int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;*/
+        int sizeOfPopulation = 5;
 		for(int i = 0; i < sizeOfPopulation ; i++)
             _population.add(new Schedule(slots));
 	}
 
 	public static void AssignRandomMatchupsToSlots(ArrayList<Schedule> _population, ArrayList<Matchup> matchups){
-        int daysPerWeek = 4;
+        /*int daysPerWeek = 4;
         int weeks = 3;
         int slotsPerDay = 2;
-        int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;
+        int sizeOfPopulation = daysPerWeek * weeks * slotsPerDay;*/
+        int sizeOfPopulation = 5;
 		for(int i = 0; i < sizeOfPopulation ; i++)
             _population.get(i).AssignRandomMatchups(matchups);
 	}
