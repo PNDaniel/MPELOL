@@ -59,7 +59,7 @@ public class Schedule {
         for(Slot slot : slots) {
             if(currentWeek != slot.getWeek()) {
                System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
-              System.out.println("-------------------------------------------------------------------");
+              System.out.println("------------------------------------------------------------------------------------");
                 currentWeek++;
           }
             System.out.println(slot.PrintSlot());

@@ -50,9 +50,20 @@ public class Main {
         System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTimeB_DR2 + "ns");
         //System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTime_SR + "ns");
 
-    /*    for (int i = 0; i < finalResult.size(); i++){
-            finalResult.get(0).PrintSchedule();
-        }*/
+        for (int i = 0; i < finalResult.size(); i++){
+            if ( (i % 2) == 0)
+            {
+                System.out.println("=====================================================================================================");
+                System.out.println("\t\t\t\t\t\t\tGroup A");
+            }
+            else
+            {
+                System.out.println("=====================================================================================================");
+                System.out.println("\t\t\t\t\t\t\tGroup B");
+            }
+            finalResult.get(i).PrintSchedule();
+            System.out.println("=====================================================================================================");
+        }
 	}
 
     public static long runPEAST(ArrayList<Schedule> population){
@@ -72,7 +83,7 @@ public class Main {
         System.out.println("=========================================================================================");
         System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
         resultSchedule.PrintSchedule();
-       // finalResult.add(resultSchedule);
+        finalResult.add(resultSchedule);
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
         totalExecutionTime += (endTime - startTime);

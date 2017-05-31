@@ -120,7 +120,7 @@ public class PEAST {
 
 		Random r = new Random();
 		int firstCell = r.nextInt(copy.getSlots().size() - 0) + 0;
-		System.out.println("FirstCell: " + firstCell);
+//		System.out.println("FirstCell: " + firstCell);
 		while (index < maximum_sequence_length) {
 			/*
 			 * double previousIterationCost = copy.getScheduleValue(); //
@@ -133,7 +133,7 @@ public class PEAST {
 
 				// Inner annealing #1
 				if (Math.random() < Math.exp(-1 / current_temperature)) {
-					System.out.println("[object to move] --> Used Annealing <--");
+//					System.out.println("[object to move] --> Used Annealing <--");
 					if (index == 1) {
 						in_hand_matchup = copy.getSlots().get(target_cell_index).getMatch_assigned();
 						object_to_move = copy.getSlots().get(firstCell).getMatch_assigned();
@@ -144,7 +144,7 @@ public class PEAST {
 						in_hand_matchup = temp;
 					}
 				} else {
-					System.out.println("[object to move] --> Used LeastFit <--");
+//					System.out.println("[object to move] --> Used LeastFit <--");
 					if (index == 1) {
 						in_hand_matchup = copy.getSlots().get(target_cell_index).getMatch_assigned();
 						int matchup_picked_to_move = leastFitObject(copy, target_cell_index); // Set
@@ -170,14 +170,14 @@ public class PEAST {
 
 			// Inner annealing #2
 			if (Math.random() < Math.exp(-1 / current_temperature)) {
-				System.out.println("[Cell to move] --> Used Annealing <--");
+//				System.out.println("[Cell to move] --> Used Annealing <--");
 				target_cell_index = randomCell(copy, previous_target_cell); // Set
 																			// targetCell
 																			// =
 																			// RandomCell(S)
 				System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
 			} else {
-				System.out.println("[Cell to move] --> FittestCell <--");
+//				System.out.println("[Cell to move] --> FittestCell <--");
 				// target_cell_index = fittestCell(copy, object_to_move); // Set
 				// targetCell = FittestCell(S,objectToMove)
 				target_cell_index = fittestCell(copy, previous_target_cell); // Set
@@ -242,10 +242,8 @@ public class PEAST {
 			returnValue = new Schedule(copy);
 			for (int i = 0; i < returnValue.getSlots().size(); i++) {
 				if (returnValue.getSlots().get(i).getMatch_assigned() == null) {
-					if (in_hand_matchup == null)
-						System.out.println("Hand : " + in_hand_matchup.PrintMatchup());
 					returnValue.getSlots().get(i).AssignMatchup(in_hand_matchup);
-					System.out.println("SEM ROLL BACK! ");
+//					System.out.println("SEM ROLL BACK! ");
 					break;
 				}
 			}
@@ -256,15 +254,12 @@ public class PEAST {
 
 			for (int i = 0; i < returnValue.getSlots().size(); i++) {
 				if (returnValue.getSlots().get(i).getMatch_assigned() == null) {
-					if (save_hand == null)
-						System.out.println("Hand : " + save_hand.PrintMatchup());
 					returnValue.getSlots().get(i).AssignMatchup(save_hand);
-					System.out.println("ROLL BACK! ");
+//					System.out.println("ROLL BACK! ");
 					break;
 				}
 			}
 		}
-
 
         System.out.println();
         System.out.println("Initial Schedule Value [abridged]: " + initial_cost_helper*10000);
@@ -281,7 +276,6 @@ public class PEAST {
         return returnValue;
     }
 
-    // TEMP discordo
     public int leastFitObject(Schedule split, int target_cell_index){
         double least_fit_value = split.getScheduleValue();
         Slot target_cell = split.getSlots().get(target_cell_index);
@@ -328,45 +322,6 @@ public class PEAST {
         return fittest_cell_index;
     }
 
-    // TEMP discordo
-/*    public int fittestCell(Schedule split, Matchup matchup_to_move){
-        double fittest_cell_value = split.getScheduleValue();
-        int original_cell_index = 0;
-        for (int i = 0; i < split.getSlots().size(); i++){
-            if (split.getSlots().get(i).getMatch_assigned().equals(matchup_to_move))
-            {
-                original_cell_index = i;
-                break;
-            }
-        }
-
-        int fittest_cell_index = original_cell_index;
-
-        for(int i = 0; i < split.getSlots().size() ;i++){
-            Schedule copy = new Schedule(split);
-
-            if(i == original_cell_index)
-                continue;
-
-            if(copy.getSlots().get(i).getMatch_assigned() == null)
-                continue;
-
-            Slot candidate = new Slot(copy.getSlots().get(i)); // TEMP
-
-            copy.getSlots().get(original_cell_index).AssignMatchup(candidate.getMatch_assigned()); // TEMP
-            candidate.AssignMatchup(matchup_to_move);
-
-            double schedule_cost = copy.getScheduleValue();
-
-            if(schedule_cost < fittest_cell_value) {
-                fittest_cell_value = schedule_cost;
-                fittest_cell_index = i;
-            }
-        }
-
-        return fittest_cell_index;
-    }
-*/
     /**
      * Support function for getting a random Matchup from a Schedule
      * @param schedule
