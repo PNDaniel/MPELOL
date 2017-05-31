@@ -34,13 +34,31 @@ public class Schedule {
 		for (int i = 0; i< slots.size();i++){
 			scheduleValue += slots.get(i).getValue();
 		}
-		System.out.println("VALUE : " + scheduleValue);
+		
+		//Testar Constraints
+		double penalty = 0;
+		penalty = Constraints.AllConstraints(this);
+		
+		scheduleValue = scheduleValue - penalty*scheduleValue;
+		
 		return 1/scheduleValue;
 	}
 
 	public ArrayList<Slot> getSlots(){
 		return slots;
 	}
+	
+	public ArrayList<Team> getInvolvedTeams(){
+		ArrayList<Team> involvedteams = new ArrayList<Team>();
+		for(int i = 0 ;  i < this.slots.size(); i++){
+			if(!involvedteams.contains(this.slots.get(i).getMatch_assigned().getTeam1()))
+				involvedteams.add(this.slots.get(i).getMatch_assigned().getTeam1());
+			if(!involvedteams.contains(this.slots.get(i).getMatch_assigned().getTeam2()))
+				involvedteams.add(this.slots.get(i).getMatch_assigned().getTeam2());
+		}
+		return involvedteams;
+	}
+	
 
     public void setSlots(ArrayList<Slot> slots)
 	{
