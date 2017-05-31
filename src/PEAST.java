@@ -36,8 +36,27 @@ public class PEAST {
             }*/
             if (round % shuffling_interval == 0)                // Apply shuffling operators
             {
-                //TODO Apply shuffling operators
+                Random r = new Random();
 
+                for (int i = 0; i < population_size; i++)
+                {
+                    for (int j = 0; j < population.get(i).getSlots().size(); j++)
+                    {
+                        int percent = (r.nextInt(10 - 1 + 1) + 1);
+                        if (percent == 1)
+                        {
+                            int newSlot = j+1;
+                            while(j == newSlot-1 ){
+                                newSlot = (r.nextInt(10 - 1 + 1) + 1);
+                            }
+
+                            Matchup temp = new Matchup (population.get(i).getSlots().get(j).UnAssignMatchupWithReturn());
+                            Matchup temp2 = new Matchup (population.get(i).getSlots().get(newSlot-1).UnAssignMatchupWithReturn());
+                            population.get(i).getSlots().get(newSlot-1).AssignMatchup(temp);
+                            population.get(i).getSlots().get(j).AssignMatchup(temp2);
+                        }
+                    }
+                }
             }
             if (round % cloning_interval == 0)                  // Replace the worst schedule with the best one
             {
@@ -199,7 +218,7 @@ public class PEAST {
 			}
 			index++;
 
-			for (int i = 0; i < copy.getSlots().size(); i++) {
+            /*		for (int i = 0; i < copy.getSlots().size(); i++) {
 				if (i != 0) {
 					if (copy.getSlots().get(i).getWeek() != copy.getSlots().get(i - 1).getWeek()) {
 						System.out.println(
@@ -209,7 +228,7 @@ public class PEAST {
 				System.out.println(copy.getSlots().get(i).PrintSlot());
 			}
 			System.out.println(
-					"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+					"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");*/
 		}
 		Schedule returnValue = new Schedule();
 

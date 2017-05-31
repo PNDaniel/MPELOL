@@ -29,7 +29,6 @@ public class Schedule {
 		}
 	}
 
-
 	public double getScheduleValue(){
 		double scheduleValue = 0.0;
 		for (int i = 0; i< slots.size();i++){
@@ -45,9 +44,7 @@ public class Schedule {
 
     public void setSlots(ArrayList<Slot> slots)
 	{
-		for (int i = 0; i < slots.size(); i++){
-			this.slots.add(new Slot(slots.get(i)));
-		}
+			this.slots = (ArrayList<Slot>) slots.clone();
     }
     public void PrintSchedule() {
         int currentWeek = 1;

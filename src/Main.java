@@ -17,6 +17,8 @@ public class Main {
     private static ArrayList<Schedule> populationB_DR2 = new ArrayList<Schedule>();
     private static ArrayList<Schedule> population_SR = new ArrayList<Schedule>();
 
+    private static ArrayList<Schedule> finalResult = new ArrayList<Schedule>();
+
 	//private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
     //private static ArrayList<Matchup> matchups2 = new ArrayList<Matchup>();
 	private static ArrayList<Team> teamsA = new ArrayList<Team>();
@@ -46,6 +48,11 @@ public class Main {
         System.out.println("Time of Execution of PEAST Algorithm for Group B First  Round-Robin " + totalExecutionTimeB_DR1 + "ns");
         System.out.println("Time of Execution of PEAST Algorithm for Group A Second Round-Robin " + totalExecutionTimeA_DR2 + "ns");
         System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTimeB_DR2 + "ns");
+        //System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTime_SR + "ns");
+
+    /*    for (int i = 0; i < finalResult.size(); i++){
+            finalResult.get(0).PrintSchedule();
+        }*/
 	}
 
     public static long runPEAST(ArrayList<Schedule> population){
@@ -65,6 +72,7 @@ public class Main {
         System.out.println("=========================================================================================");
         System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
         resultSchedule.PrintSchedule();
+       // finalResult.add(resultSchedule);
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
         totalExecutionTime += (endTime - startTime);
