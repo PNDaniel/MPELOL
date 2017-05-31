@@ -35,7 +35,7 @@ public class Slot {
 		double time_val;
 		
 		if(primetime)
-			time_val = 0.5*(day+week);
+			time_val = 1.5*(day+week);
 		else
 			time_val = (day+week);
 
@@ -72,6 +72,7 @@ public class Slot {
         }
         else {
             return "Day " + day + " -  " + printDay + " : "+ timeDay + " -> No match assigned";
+            //return "No match assigned";
         }
     }
 
@@ -108,6 +109,12 @@ public class Slot {
 		value = 0;
 		return mat;
 	}
+
+    /* DEPRECATED
+     public void setMatch_assigned(Matchup match_assigned) {
+     
+        this.match_assigned = match_assigned;
+    }*/
 
     public boolean isPrimetime() {
         return primetime;

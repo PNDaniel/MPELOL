@@ -29,11 +29,13 @@ public class Schedule {
 		}
 	}
 
+
 	public double getScheduleValue(){
 		double scheduleValue = 0.0;
 		for (int i = 0; i< slots.size();i++){
 			scheduleValue += slots.get(i).getValue();
 		}
+		System.out.println("VALUE : " + scheduleValue);
 		return 1/scheduleValue;
 	}
 
@@ -43,23 +45,21 @@ public class Schedule {
 
     public void setSlots(ArrayList<Slot> slots)
 	{
-
 		for (int i = 0; i < slots.size(); i++){
 			this.slots.add(new Slot(slots.get(i)));
 		}
     }
-
     public void PrintSchedule() {
         int currentWeek = 1;
 
         System.out.println("\t\t\t\t\t  Week "+ currentWeek +" Game Slots");
         for(Slot slot : slots) {
             if(currentWeek != slot.getWeek()) {
-                System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
-                System.out.println("-------------------------------------------------------------------");
+               System.out.println("\t\t\t\t\t  Week "+ slot.getWeek() +" Game Slots");
+              System.out.println("-------------------------------------------------------------------");
                 currentWeek++;
-            }
+          }
             System.out.println(slot.PrintSlot());
         }
-    }
+	}
 }
