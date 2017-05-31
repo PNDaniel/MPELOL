@@ -34,11 +34,12 @@ public class PEAST {
             /*if (round % update_interval == 0) {
                 //TODO Update ADAGEN Framework
             }*/
-            if (round % shuffling_interval == 0) {
+            if (round % shuffling_interval == 0)                // Apply shuffling operators
+            {
                 //TODO Apply shuffling operators
 
             }
-            if (round % cloning_interval == 0)              // Replace the worst schedule with the best one
+            if (round % cloning_interval == 0)                  // Replace the worst schedule with the best one
             {
                 double best_value;
                 double worst_value;

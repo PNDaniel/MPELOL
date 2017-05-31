@@ -37,32 +37,39 @@ public class Main {
 	public static void main (String[] args){
 
         StartGroups(); // Starts every Round-Robin for both Groups
-        long totalExecutionTime = 0;
+        long totalExecutionTimeA_DR1 = runPEAST(populationA_DR1);
+        long totalExecutionTimeA_DR2 = runPEAST(populationB_DR1);
+        long totalExecutionTimeB_DR1 = runPEAST(populationA_DR2);
+        long totalExecutionTimeB_DR2 = runPEAST(populationB_DR2);
+        //long totalExecutionTimeSR = 0;
+        System.out.println("Time of Execution of PEAST Algorithm for Group A First  Round-Robin " + totalExecutionTimeA_DR1 + "ns");
+        System.out.println("Time of Execution of PEAST Algorithm for Group B First  Round-Robin " + totalExecutionTimeB_DR1 + "ns");
+        System.out.println("Time of Execution of PEAST Algorithm for Group A Second Round-Robin " + totalExecutionTimeA_DR2 + "ns");
+        System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTimeB_DR2 + "ns");
+	}
 
+    public static long runPEAST(ArrayList<Schedule> population){
+        long totalExecutionTime = 0;
         System.out.println("=========================================================================================");
         System.out.println("\t\t\t\t\t\tInitial Schedule for Group A First Round");
-        Schedule initial_SplitA_DR1 = populationA_DR1.get(0);
-        initial_SplitA_DR1.PrintSchedule();
+        Schedule initial_Split = population.get(0);
+        initial_Split.PrintSchedule();
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
-        
-        /* testing GHCM */
+
         long startTime = System.nanoTime();
-		PEAST peastAlg = new PEAST();
+        PEAST peastAlg = new PEAST();
         long endTime = System.nanoTime();
-        //double current_temperature = 1/Math.log(Math.pow(0.75,-1));
-        //Schedule resultScheduleA_DR2 = peastAlg.GHCM(initial_SplitA_DR1,10,0,current_temperature);
-        Schedule resultScheduleB_DR1 = peastAlg.run(20, 5, 5,populationB_DR1);
-        /* END of test */
+        Schedule resultSchedule = peastAlg.run(20, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
 
         System.out.println("=========================================================================================");
         System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
-        resultScheduleB_DR1.PrintSchedule();
+        resultSchedule.PrintSchedule();
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
-        System.out.println("Time of Execution of PEAST Algorithm for Group A's first half of its Double Round-Robin: " + (endTime - startTime) + "ns");
         totalExecutionTime += (endTime - startTime);
-	}
+        return totalExecutionTime;
+    }
 
     public static void StartGroups(){
         // Prepare Teams
