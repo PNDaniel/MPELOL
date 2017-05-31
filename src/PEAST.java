@@ -33,9 +33,41 @@ public class PEAST {
             }*/
             if (round % shuffling_interval == 0) {
                 //TODO Apply shuffling operators
+                
             }
             if (round % cloning_interval == 0) {
                 //TODO Replace the worst schedule with the best one
+                double best_value;
+                double worst_value;
+                int worst_value_index = 0;
+                int best_value_index = 0;
+                if (population.get(0).getScheduleValue() >= population.get(1).getScheduleValue())
+                {
+                    best_value = population.get(0).getScheduleValue();
+                    best_value_index = 0;
+                    worst_value = population.get(1).getScheduleValue();
+                    worst_value_index = 1;
+                }
+                else {
+                    worst_value = population.get(0).getScheduleValue();
+                    worst_value_index = 0;
+                    best_value = population.get(1).getScheduleValue();
+                    best_value_index = 1;
+                }
+                for (int i = 2; i < population_size; i++)
+                {
+                    if (worst_value > population.get(i).getScheduleValue())
+                    {
+                        worst_value = population.get(i).getScheduleValue();
+                        worst_value_index = i;
+                    }
+                    if (best_value < population.get(i).getScheduleValue())
+                    {
+                        best_value = population.get(i).getScheduleValue();
+                        best_value_index = i;
+                    }
+                }
+                population.get(worst_value_index).setSlots(population.get(best_value_index).getSlots());
             }
             round++;
         }
@@ -149,7 +181,6 @@ public class PEAST {
                 costDiff = current_cost - previousIterationCost;
                 if (costDiff > last_increment){
                     index = 420691337;
-                    System.out.println("MAX_VALUE");
                     break; // This is probably wrong
                 }
                 else{

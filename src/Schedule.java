@@ -41,10 +41,15 @@ public class Schedule {
 		return slots;
 	}
 
-    public void setSlots(ArrayList<Slot> slots){
-        this.slots = (ArrayList<Slot>) slots.clone();
+    public void setSlots(ArrayList<Slot> slots)
+	{
+        //this.slots = (ArrayList<Slot>) slots.clone();
+		for (int i = 0; i < slots.size(); i++){
+			this.slots.add(new Slot(slots.get(i)));
+		}
     }
     public void addSlot(Slot slot){
+
         slots.add(new Slot (slot));
     }
 }
