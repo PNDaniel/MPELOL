@@ -1,13 +1,8 @@
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Main {
-	
-	//private static ArrayList<Slot> slots = new ArrayList<Slot>();
-	//private static ArrayList<Schedule> population = new ArrayList<Schedule>();
+
     private static ArrayList<Schedule> populationA_DR1 = new ArrayList<Schedule>();
     private static ArrayList<Schedule> populationA_DR2 = new ArrayList<Schedule>();
     private static ArrayList<Schedule> populationB_DR1 = new ArrayList<Schedule>();
@@ -16,8 +11,6 @@ public class Main {
 
     private static ArrayList<Schedule> finalResult = new ArrayList<Schedule>();
 
-	//private static ArrayList<Matchup> matchups = new ArrayList<Matchup>();
-    //private static ArrayList<Matchup> matchups2 = new ArrayList<Matchup>();
 	private static ArrayList<Team> teamsA = new ArrayList<Team>();
     private static ArrayList<Team> teamsB = new ArrayList<Team>();
 
@@ -44,11 +37,11 @@ public class Main {
         long totalExecutionTimeB_DR2 = runPEAST(populationB_DR2);
 
         System.out.println("=====================================================================================================");
-        System.out.println("Time of Execution of PEAST Algorithm for Group A First  Round-Robin " + totalExecutionTimeA_DR1 + "ns");
-        System.out.println("Time of Execution of PEAST Algorithm for Group B First  Round-Robin " + totalExecutionTimeB_DR1 + "ns");
-        System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTime_SR + "ns");
-        System.out.println("Time of Execution of PEAST Algorithm for Group A Second Round-Robin " + totalExecutionTimeA_DR2 + "ns");
-        System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTimeB_DR2 + "ns");
+        System.out.println("Time of Execution of PEAST Algorithm for Group A First  Round-Robin " + totalExecutionTimeA_DR1/1000000 + "ms");
+        System.out.println("Time of Execution of PEAST Algorithm for Group B First  Round-Robin " + totalExecutionTimeB_DR1/1000000 + "ms");
+        System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTime_SR/1000000 + "ms");
+        System.out.println("Time of Execution of PEAST Algorithm for Group A Second Round-Robin " + totalExecutionTimeA_DR2/1000000 + "ms");
+        System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTimeB_DR2/1000000 + "ms");
 
 
         for (int i = 0; i < finalResult.size(); i++){
@@ -86,16 +79,11 @@ public class Main {
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
 
-        long startTime = System.nanoTime();
         PEAST peastAlg = new PEAST();
+        long startTime = System.nanoTime();
+        Schedule resultSchedule = peastAlg.run(200000, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
         long endTime = System.nanoTime();
-        Schedule resultSchedule = peastAlg.run(10000, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
         finalResult.add(resultSchedule);
-      /*  System.out.println("=========================================================================================");
-        System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
-        resultSchedule.PrintSchedule();
-        System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");*/
         totalExecutionTime += (endTime - startTime);
         return totalExecutionTime;
     }
