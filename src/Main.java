@@ -59,6 +59,9 @@ public class Main {
                 System.out.println("\t\t\t\t\t\t\tGroup B");
             }
             finalResult.get(i).PrintSchedule();
+            finalResult.get(i).getScheduleValue();
+            
+            
             System.out.println("=====================================================================================================");
         }
 	}

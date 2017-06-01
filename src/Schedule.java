@@ -35,22 +35,37 @@ public class Schedule {
 			scheduleValue += slots.get(i).getValue();
 		}
 		
+		double prevsched = scheduleValue;
 		//Testar Constraints
-		double penalty = 0;
+		double penalty = 0;		
 		penalty = Constraints.AllConstraints(this);
 		
 		scheduleValue = scheduleValue - penalty*scheduleValue;
 		
+		
+		
+		System.out.println("Penalty: "+ penalty);
+		System.out.println("Valor sem penalty: " + prevsched);
+		System.out.println("Valor com penalty: " + scheduleValue);
+		
 		return 1/scheduleValue;
 	}
-
+	
 	public ArrayList<Slot> getSlots(){
 		return slots;
 	}
 	
 	public ArrayList<Team> getInvolvedTeams(){
 		ArrayList<Team> involvedteams = new ArrayList<Team>();
+		System.out.println("size: " + this.slots.size());
 		for(int i = 0 ;  i < this.slots.size(); i++){
+			if(this.slots.get(i).getMatch_assigned() == null)
+				continue;
+			if(i == 0){
+				involvedteams.add(this.slots.get(i).getMatch_assigned().getTeam1());
+				involvedteams.add(this.slots.get(i).getMatch_assigned().getTeam2());
+				continue;
+			}
 			if(!involvedteams.contains(this.slots.get(i).getMatch_assigned().getTeam1()))
 				involvedteams.add(this.slots.get(i).getMatch_assigned().getTeam1());
 			if(!involvedteams.contains(this.slots.get(i).getMatch_assigned().getTeam2()))
