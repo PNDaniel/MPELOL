@@ -36,28 +36,38 @@ public class Main {
 	public static void main (String[] args){
 
         StartGroups(); // Starts every Round-Robin for both Groups
+
         long totalExecutionTimeA_DR1 = runPEAST(populationA_DR1);
         long totalExecutionTimeA_DR2 = runPEAST(populationB_DR1);
+        long totalExecutionTime_SR = runPEAST(population_SR);
         long totalExecutionTimeB_DR1 = runPEAST(populationA_DR2);
         long totalExecutionTimeB_DR2 = runPEAST(populationB_DR2);
-        //long totalExecutionTimeSR = 0;
+
+        System.out.println("=====================================================================================================");
         System.out.println("Time of Execution of PEAST Algorithm for Group A First  Round-Robin " + totalExecutionTimeA_DR1 + "ns");
         System.out.println("Time of Execution of PEAST Algorithm for Group B First  Round-Robin " + totalExecutionTimeB_DR1 + "ns");
+        System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTime_SR + "ns");
         System.out.println("Time of Execution of PEAST Algorithm for Group A Second Round-Robin " + totalExecutionTimeA_DR2 + "ns");
         System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTimeB_DR2 + "ns");
-        //System.out.println("Time of Execution of PEAST Algorithm for Group B Second Round-Robin " + totalExecutionTime_SR + "ns");
+
 
         for (int i = 0; i < finalResult.size(); i++){
-            if ( (i % 2) == 0)
+            if ((i== 0 || i ==3 ))
             {
                 System.out.println("=====================================================================================================");
                 System.out.println("\t\t\t\t\t\t\tGroup A");
+            }
+            else if( i == 2)
+            {
+                System.out.println("=====================================================================================================");
+                System.out.println("\t\t\t\t\t\t\t Single Round-Robin");
             }
             else
             {
                 System.out.println("=====================================================================================================");
                 System.out.println("\t\t\t\t\t\t\tGroup B");
             }
+
             finalResult.get(i).PrintSchedule();
             finalResult.get(i).getScheduleValue();
             
@@ -79,13 +89,12 @@ public class Main {
         PEAST peastAlg = new PEAST();
         long endTime = System.nanoTime();
         Schedule resultSchedule = peastAlg.run(20, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
-
-        System.out.println("=========================================================================================");
+        finalResult.add(resultSchedule);
+      /*  System.out.println("=========================================================================================");
         System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
         resultSchedule.PrintSchedule();
-        finalResult.add(resultSchedule);
         System.out.println("=========================================================================================");
-        System.out.println("=========================================================================================");
+        System.out.println("=========================================================================================");*/
         totalExecutionTime += (endTime - startTime);
         return totalExecutionTime;
     }
@@ -102,28 +111,28 @@ public class Main {
         FillUpMatchups_DR_Main(teamsB, matchupsB_DR1);
         Collections.reverse(teamsB);
         FillUpMatchups_DR_Main(teamsB, matchupsB_DR2);
-//        FillUpMatchups_DR_Main(teamsA, matchups_SR);
+        FillUpMatchups_SR(teamsA, teamsB, matchups_SR);
 
         // Prepare Slots
         FillUpSlotsA_DR1();
         FillUpSlotsA_DR2();
         FillUpSlotsB_DR1();
         FillUpSlotsB_DR2();
-//        FillUpSlots_SR();
+        FillUpSlots_SR();
 
         // Fill Population with Slots
         FillUpPopulation(populationA_DR1, slotsA_DR1);
         FillUpPopulation(populationA_DR2, slotsA_DR2);
         FillUpPopulation(populationB_DR1, slotsB_DR1);
         FillUpPopulation(populationB_DR2, slotsB_DR2);
-//        FillUpPopulation(population_SR, slots_SR);
+        FillUpPopulation(population_SR, slots_SR);
 
         // Fill Population slots with Matchups
         AssignRandomMatchupsToSlots(populationA_DR1, matchupsA_DR1);
         AssignRandomMatchupsToSlots(populationA_DR2, matchupsA_DR2);
         AssignRandomMatchupsToSlots(populationB_DR1, matchupsB_DR1);
         AssignRandomMatchupsToSlots(populationB_DR2, matchupsB_DR2);
-//        AssignRandomMatchupsToSlots(population_SR, matchups_SR);
+        AssignRandomMatchupsToSlots(population_SR, matchups_SR);
 
     }
 
@@ -152,6 +161,45 @@ public class Main {
             }
             sizeOfJ--;
         }
+    }
+
+    public static void FillUpMatchups_SR(ArrayList<Team> teams1,ArrayList<Team> teams2 ,ArrayList<Matchup> matchups) {
+        int size = 5;
+        int sizeOfJ = 5;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < sizeOfJ; j++) {
+                matchups.add(new Matchup(teams1.get(i), teams2.get(j)));
+            }
+        }
+    }
+
+    public static void FillUpSlots_SR(){
+        //Slot(primetime, day, week)
+        slots_SR.add(new Slot(false, 1, 4));
+        slots_SR.add(new Slot(true, 1, 4));
+        slots_SR.add(new Slot(false, 2, 4));
+        slots_SR.add(new Slot(true, 2, 4));
+        slots_SR.add(new Slot(false, 3, 4));
+        slots_SR.add(new Slot(true, 3, 4));
+        slots_SR.add(new Slot(false, 1, 5));
+        slots_SR.add(new Slot(true, 1, 5));
+        slots_SR.add(new Slot(false, 2, 5));
+        slots_SR.add(new Slot(true, 2, 5));
+        slots_SR.add(new Slot(false, 3, 5));
+        slots_SR.add(new Slot(true, 3, 5));
+        slots_SR.add(new Slot(false, 1, 6));
+        slots_SR.add(new Slot(true, 1, 6));
+        slots_SR.add(new Slot(false, 2, 6));
+        slots_SR.add(new Slot(true, 2, 6));
+        slots_SR.add(new Slot(false, 3, 6));
+        slots_SR.add(new Slot(true, 3, 6));
+        slots_SR.add(new Slot(false, 1, 7));
+        slots_SR.add(new Slot(true, 1, 7));
+        slots_SR.add(new Slot(false, 2, 7));
+        slots_SR.add(new Slot(true, 2, 7));
+        slots_SR.add(new Slot(false, 3, 7));
+        slots_SR.add(new Slot(true, 3, 7));
+        slots_SR.add(new Slot(false, 4, 7));
     }
 
 	public static void FillUpSlotsA_DR1(){
