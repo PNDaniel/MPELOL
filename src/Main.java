@@ -25,6 +25,7 @@ public class Main {
     private static ArrayList<Slot> slotsB_DR1 = new ArrayList<Slot>();
     private static ArrayList<Slot> slotsB_DR2 = new ArrayList<Slot>();
     private static ArrayList<Slot> slots_SR = new ArrayList<Slot>();
+    private static double sum = 0;
 	
 	public static void main (String[] args){
 
@@ -76,12 +77,14 @@ public class Main {
         System.out.println("\t\t\t\t\t\tInitial Schedule for Group A First Round");
         Schedule initial_Split = population.get(0);
         initial_Split.PrintSchedule();
+        sum += 1/initial_Split.getScheduleValue();
+        System.out.println("Initial Value: " + sum);
         System.out.println("=========================================================================================");
         System.out.println("=========================================================================================");
 
         PEAST peastAlg = new PEAST();
         long startTime = System.nanoTime();
-        Schedule resultSchedule = peastAlg.run(200000, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
+        Schedule resultSchedule = peastAlg.run(50000, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
         long endTime = System.nanoTime();
         finalResult.add(resultSchedule);
         totalExecutionTime += (endTime - startTime);
