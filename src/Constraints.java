@@ -24,7 +24,7 @@ public class Constraints {
 			occurencecounter = 0;
 			ongoingweek = -1;
 			for (int x = 0; x < split.getSlots().size(); x++) {
-				
+
 				Slot aux = split.getSlots().get(x);
 				if (aux.getMatch_assigned() == null)
 					continue;
@@ -33,7 +33,7 @@ public class Constraints {
 					occurencecounter = 0;
 				} else if (aux.getWeek() != ongoingweek) { // new week begins
 					if (occurencecounter < 1 || occurencecounter > 2)
-						return 0.4;
+						return 0.35;
 					ongoingweek = aux.getWeek();
 					occurencecounter = 0;
 				}
@@ -52,8 +52,8 @@ public class Constraints {
 	public static double HardConstraint2(Schedule split) {
 		for (int x = 0; x < split.getSlots().size(); x++) {
 			Slot aux = split.getSlots().get(x);
-			if (aux.getValue() < 260)
-				return 0.3;
+			if (aux.getValue() < 120)
+				return 0.25;
 		}
 		return 0;
 	}
@@ -63,10 +63,14 @@ public class Constraints {
 		String t2 = null;
 		boolean flag = false;
 		for (int x = 0; x < split.getSlots().size(); x++) {
-			if(x == 0)
+			if (x == 0)
 				flag = false;
 			Slot aux = split.getSlots().get(x);
-			if(aux.getMatch_assigned() == null)
+			if (aux.getMatch_assigned() == null)
+				continue;
+			if(aux.getMatch_assigned().getTeam1() == null)
+				continue;
+			if (aux.getMatch_assigned().getTeam1().getName() == null)
 				continue;
 			if (!flag) {
 				t1 = aux.getMatch_assigned().getTeam1().getName();
@@ -74,11 +78,18 @@ public class Constraints {
 				flag = true;
 				continue;
 			}
+			/*
+			 * System.out.println("team: " +
+			 * aux.getMatch_assigned().getTeam1()); System.out.println("t1 : " +
+			 * t1); System.out.println("name: " +
+			 * aux.getMatch_assigned().getTeam1().getName());
+			 */
+
 			if (aux.getMatch_assigned().getTeam1().getName().equals(t1)
 					|| aux.getMatch_assigned().getTeam1().getName().equals(t2)
 					|| aux.getMatch_assigned().getTeam2().getName().equals(t1)
 					|| aux.getMatch_assigned().getTeam2().getName().equals(t2)) {
-				return 0.20;
+				return 0.15;
 			} else {
 				t1 = aux.getMatch_assigned().getTeam1().getName();
 				t2 = aux.getMatch_assigned().getTeam2().getName();
@@ -92,7 +103,7 @@ public class Constraints {
 		for (int x = 0; x < split.getSlots().size(); x++) {
 			Slot aux = split.getSlots().get(x);
 			if (aux.getValue() < 300)
-				return 0.1;
+				return 0.05;
 		}
 		return 0;
 	}

@@ -135,13 +135,33 @@ public class PEAST {
 				if (Math.random() < Math.exp(-1 / current_temperature)) {
 //					System.out.println("[object to move] --> Used Annealing <--");
 					if (index == 1) {
-						in_hand_matchup = copy.getSlots().get(target_cell_index).getMatch_assigned();
+						in_hand_matchup = copy.getSlots().get(target_cell_index).UnAssignMatchupWithReturn();
 						object_to_move = copy.getSlots().get(firstCell).getMatch_assigned();
 						copy.getSlots().get(firstCell).UnAssignMatchup();
+						
+						copy.getSlots().get(firstCell).AssignMatchup(in_hand_matchup);
+						
+						int random_obj_index = -1;
+						while(random_obj_index == -1 || copy.getSlots().get(random_obj_index).getMatch_assigned() == null)
+							random_obj_index = new Random().nextInt(copy.getSlots().size());
+						
+						in_hand_matchup = copy.getSlots().get(random_obj_index).UnAssignMatchupWithReturn();
+								
 					} else {
-						Matchup temp = copy.getSlots().get(target_cell_index).getMatch_assigned();
+						//Matchup temp = copy.getSlots().get(target_cell_index).getMatch_assigned();
 						object_to_move = in_hand_matchup;
-						in_hand_matchup = temp;
+						in_hand_matchup = copy.getSlots().get(target_cell_index).UnAssignMatchupWithReturn();
+						for(int u = 0; u < copy.getSlots().size(); u++){
+							if(copy.getSlots().get(u).getMatch_assigned() == null){
+								copy.getSlots().get(u).AssignMatchup(in_hand_matchup);
+							}
+						}
+						
+						int random_obj_index = -1;
+						while(random_obj_index == -1 || copy.getSlots().get(random_obj_index).getMatch_assigned() == null)
+							random_obj_index = new Random().nextInt(copy.getSlots().size());
+						
+						in_hand_matchup = copy.getSlots().get(random_obj_index).UnAssignMatchupWithReturn();
 					}
 				} else {
 //					System.out.println("[object to move] --> Used LeastFit <--");
