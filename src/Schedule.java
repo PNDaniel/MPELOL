@@ -4,7 +4,23 @@ import java.util.Collections;
 public class Schedule {
 
 	private ArrayList<Slot> slots = new ArrayList<Slot>();
-	
+
+    public double getPenaltyf() {
+        return penaltyf;
+    }
+
+    public double getPrevsched() {
+        return prevsched;
+    }
+
+    public double getSchdvalf() {
+        return schdvalf;
+    }
+
+    private double penaltyf = 0;
+    private double prevsched = 0;
+    private double schdvalf = 0;
+
 	public Schedule() {
 
 	}
@@ -35,18 +51,13 @@ public class Schedule {
 			scheduleValue += slots.get(i).getValue();
 		}
 		
-		double prevsched = scheduleValue;
+		this.prevsched = scheduleValue;
 		//Testar Constraints
 		double penalty = 0;		
 		penalty = Constraints.AllConstraints(this);
-		
+		penaltyf = penalty;
 		scheduleValue = scheduleValue - penalty*scheduleValue;
-		
-		
-		
-		System.out.println("Penalty: "+ penalty);
-		System.out.println("Valor sem penalty: " + prevsched);
-		System.out.println("Valor com penalty: " + scheduleValue);
+        schdvalf = scheduleValue;
 		
 		return 1/scheduleValue;
 	}
@@ -57,7 +68,7 @@ public class Schedule {
 	
 	public ArrayList<Team> getInvolvedTeams(){
 		ArrayList<Team> involvedteams = new ArrayList<Team>();
-		System.out.println("size: " + this.slots.size());
+//		System.out.println("size: " + this.slots.size());
 		for(int i = 0 ;  i < this.slots.size(); i++){
 			if(this.slots.get(i).getMatch_assigned() == null)
 				continue;

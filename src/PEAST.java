@@ -114,7 +114,7 @@ public class PEAST {
 
 		double initial_cost_helper = -1;
 
-		System.out.println("Initial Schedule Value: " + split.getScheduleValue() + "\n");
+//		System.out.println("Initial Schedule Value: " + split.getScheduleValue() + "\n");
 		double current_cost = 0;
 		double previousIterationCost = 0;
 
@@ -161,11 +161,11 @@ public class PEAST {
 				}
 
 				copy.getSlots().get(target_cell_index).AssignMatchup(object_to_move);
-				if (in_hand_matchup != null)
+/*				if (in_hand_matchup != null)
 					System.out.println("Hand : " + in_hand_matchup.PrintMatchup());
 				if (object_to_move != null)
 					System.out.println("Object To Move : " + object_to_move.PrintMatchup());
-				System.out.println("Cell that's going to receive this New Match : " + target_cell_index);
+				System.out.println("Cell that's going to receive this New Match : " + target_cell_index);*/
 			}
 
 			// Inner annealing #2
@@ -175,7 +175,7 @@ public class PEAST {
 																			// targetCell
 																			// =
 																			// RandomCell(S)
-				System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
+//				System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
 			} else {
 //				System.out.println("[Cell to move] --> FittestCell <--");
 				// target_cell_index = fittestCell(copy, object_to_move); // Set
@@ -184,7 +184,7 @@ public class PEAST {
 																				// targetCell
 																				// =
 																				// FittestCell(S,objectToMove)
-				System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
+//				System.out.println("!! Cell Slot picked For next Iteration :" + target_cell_index);
 			}
 
 			// salta it. 0 // salta it 1
@@ -197,10 +197,10 @@ public class PEAST {
 
 			if (current_cost < optimal_cost && index >= 1) {
 				optimal_cost = current_cost;
-				System.out.println("Optimal value Cost:" + optimal_cost);
+//				System.out.println("Optimal value Cost:" + optimal_cost);
 				if (in_hand_matchup != null) {
 					save_hand = new Matchup(in_hand_matchup);
-					System.out.println("Save_Hand " + save_hand.PrintMatchup());
+//					System.out.println("Save_Hand " + save_hand.PrintMatchup());
 				} else {
 					save_hand = new Matchup(in_hand_matchup);
 				}
@@ -261,18 +261,18 @@ public class PEAST {
 			}
 		}
 
-        System.out.println();
+ /*       System.out.println();
         System.out.println("Initial Schedule Value [abridged]: " + initial_cost_helper*10000);
         System.out.println("Optimal Cost: " + optimal_cost*10000);
-        System.out.println("Cost of returnValue: " +  returnValue.getScheduleValue()*10000);
+        System.out.println("Cost of returnValue: " +  returnValue.getScheduleValue()*10000);*/
        // SaveToFile(current_round,everyCost,split, returnValue);
 
-        try {
+   /*     try {
             returnValue.PrintSchedule();
         }
         catch(Exception e){
 
-        }
+        }*/
         return returnValue;
     }
 

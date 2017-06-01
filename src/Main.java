@@ -69,8 +69,9 @@ public class Main {
             }
 
             finalResult.get(i).PrintSchedule();
-            finalResult.get(i).getScheduleValue();
-            
+            System.out.println("Penalty : " + finalResult.get(i).getPenaltyf());
+            System.out.println("Valor sem penalty : " + finalResult.get(i).getPrevsched());
+            System.out.println("Valor com penalty : " + finalResult.get(i).getSchdvalf());
             
             System.out.println("=====================================================================================================");
         }
@@ -88,7 +89,7 @@ public class Main {
         long startTime = System.nanoTime();
         PEAST peastAlg = new PEAST();
         long endTime = System.nanoTime();
-        Schedule resultSchedule = peastAlg.run(20, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
+        Schedule resultSchedule = peastAlg.run(10000, 5, 5,population); // (iteration_limit, cloning_interval, shuffling_interval, population)
         finalResult.add(resultSchedule);
       /*  System.out.println("=========================================================================================");
         System.out.println("\t\t\t\t\t\tGHCM Final Schedule");
