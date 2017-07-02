@@ -32,7 +32,8 @@ public class PEAST {
             //TODO Update simulated annealing framework
 
             /*if (round % update_interval == 0) {
-                //TODO Update ADAGEN Framework
+                //TODO Update ADAGEN Framework 
+                 * Never found any sources to implement this. Check Constraints.java for the alternatives used
             }*/
             if (round % shuffling_interval == 0)                // Apply shuffling operators
             {

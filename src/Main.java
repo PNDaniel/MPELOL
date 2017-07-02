@@ -30,8 +30,8 @@ public class Main {
 	public static void main (String[] args){
 
 		//test the split value that actually occurred
-		TestRealSplitValue();
-		System.exit(0);
+		//TestRealSplitValue();
+		//System.exit(0);
 		
 		//
 		
@@ -75,6 +75,9 @@ public class Main {
             
             System.out.println("=====================================================================================================");
         }
+  
+        
+        
 	}
 
     public static long runPEAST(ArrayList<Schedule> population){
@@ -319,6 +322,10 @@ public class Main {
         realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(0)));
         realmatchups.add(new Matchup(teamsA.get(2), teamsA.get(3)));
         
+        for(int i = 0; i < 10; i++)
+        	slotsA_DR1.get(i).AssignMatchup(realmatchups.get(i));
+        
+        realmatchups.clear();
         // Last 3 weeks group A
         realmatchups.add(new Matchup(teamsA.get(3), teamsA.get(2)));
         realmatchups.add(new Matchup(teamsA.get(0), teamsA.get(1)));
@@ -330,7 +337,11 @@ public class Main {
         realmatchups.add(new Matchup(teamsA.get(1), teamsA.get(4)));
         realmatchups.add(new Matchup(teamsA.get(0), teamsA.get(2)));
         realmatchups.add(new Matchup(teamsA.get(3), teamsA.get(1)));
+        for(int i = 0; i < 10; i++)
+        	slotsA_DR2.get(i).AssignMatchup(realmatchups.get(i));
         
+        
+        realmatchups.clear();
         // Single Round Robin
         realmatchups.add(new Matchup(teamsA.get(4), teamsB.get(0)));
         realmatchups.add(new Matchup(teamsA.get(0), teamsB.get(1)));
@@ -360,7 +371,56 @@ public class Main {
         realmatchups.add(new Matchup(teamsA.get(1), teamsB.get(1)));
         realmatchups.add(new Matchup(teamsB.get(4), teamsA.get(4)));
         
+        for(int i = 0; i < 25; i++)
+        	slots_SR.get(i).AssignMatchup(realmatchups.get(i));
         
-        // GROUP B LEFT
+        realmatchups.clear();
+        //group B first 3 weeks
+        
+        realmatchups.add(new Matchup(teamsB.get(4), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(4), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(2)));
+        realmatchups.add(new Matchup(teamsB.get(1), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(4)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsB.get(4)));
+        
+        for(int i = 0; i < 10; i++)
+        	slotsB_DR1.get(i).AssignMatchup(realmatchups.get(i));
+        
+        realmatchups.clear();
+        //group B last 3 weeks
+        
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(4)));
+        realmatchups.add(new Matchup(teamsB.get(0), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsB.get(4)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(2)));
+        realmatchups.add(new Matchup(teamsB.get(4), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(4), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsB.get(1)));
+        
+        
+        for(int i = 0; i < 10; i++)
+        	slotsB_DR2.get(i).AssignMatchup(realmatchups.get(i));
+        
+        
+        Schedule GroupA1 = new Schedule(slotsA_DR1);
+        Schedule GroupA2 = new Schedule(slotsA_DR2);
+        Schedule GroupAB = new Schedule(slots_SR);
+        Schedule GroupB1 = new Schedule(slotsB_DR1);
+        Schedule GroupB2 = new Schedule(slotsB_DR2);
+        
+        double b2val = 1/GroupB2.getScheduleValue();
+       
+        
+        
+        System.out.println("Total Group B, last 3 weeks, 2017 EULCS Spring Split value: " + b2val);
+        
 	}
 }
