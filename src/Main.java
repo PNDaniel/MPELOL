@@ -29,6 +29,12 @@ public class Main {
 	
 	public static void main (String[] args){
 
+		//test the split value that actually occurred
+		TestRealSplitValue();
+		System.exit(0);
+		
+		//
+		
         StartGroups(); // Starts every Round-Robin for both Groups
 
         long totalExecutionTimeA_DR1 = runPEAST(populationA_DR1);
@@ -268,5 +274,93 @@ public class Main {
         int sizeOfPopulation = 5;
 		for(int i = 0; i < sizeOfPopulation ; i++)
             _population.get(i).AssignRandomMatchups(matchups);
+	}
+	
+	public static void TestRealSplitValue(){
+		// Prepare Teams
+        FillUpTeamsArrayA();
+        FillUpTeamsArrayB();
+
+        // Prepare Matchups
+        FillUpMatchups_DR_Main(teamsA, matchupsA_DR1);
+        Collections.reverse(teamsA);
+        FillUpMatchups_DR_Main(teamsA, matchupsA_DR2);
+        FillUpMatchups_DR_Main(teamsB, matchupsB_DR1);
+        Collections.reverse(teamsB);
+        FillUpMatchups_DR_Main(teamsB, matchupsB_DR2);
+        FillUpMatchups_SR(teamsA, teamsB, matchups_SR);
+
+        // Prepare Slots
+        FillUpSlotsA_DR1();
+        FillUpSlotsA_DR2();
+        FillUpSlotsB_DR1();
+        FillUpSlotsB_DR2();
+        FillUpSlots_SR();
+
+        // Fill Population with Slots
+        FillUpPopulation(populationA_DR1, slotsA_DR1);
+        FillUpPopulation(populationA_DR2, slotsA_DR2);
+        FillUpPopulation(populationB_DR1, slotsB_DR1);
+        FillUpPopulation(populationB_DR2, slotsB_DR2);
+        FillUpPopulation(population_SR, slots_SR);
+        
+        ArrayList<Matchup> realmatchups = new ArrayList<Matchup>();
+        
+        
+        // First 3 weeks group A
+        realmatchups.add(new Matchup(teamsA.get(0), teamsA.get(3)));
+        realmatchups.add(new Matchup(teamsA.get(1), teamsA.get(4)));
+        realmatchups.add(new Matchup(teamsA.get(2), teamsA.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(1), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(3)));
+        realmatchups.add(new Matchup(teamsA.get(1), teamsA.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(3), teamsA.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(2), teamsA.get(3)));
+        
+        // Last 3 weeks group A
+        realmatchups.add(new Matchup(teamsA.get(3), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsA.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(1), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsA.get(3)));
+        realmatchups.add(new Matchup(teamsA.get(3), teamsA.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(1), teamsA.get(4)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(3), teamsA.get(1)));
+        
+        // Single Round Robin
+        realmatchups.add(new Matchup(teamsA.get(4), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsA.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsA.get(3)));
+        realmatchups.add(new Matchup(teamsA.get(2), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsB.get(4)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsA.get(3)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsA.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(4), teamsB.get(1)));
+
+        realmatchups.add(new Matchup(teamsB.get(2), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsB.get(4), teamsA.get(3)));
+        realmatchups.add(new Matchup(teamsB.get(0), teamsA.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(3), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsB.get(3)));
+        realmatchups.add(new Matchup(teamsB.get(2), teamsA.get(4)));
+        realmatchups.add(new Matchup(teamsB.get(4), teamsA.get(1)));
+        realmatchups.add(new Matchup(teamsA.get(2), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(2), teamsB.get(4)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsA.get(4)));
+
+        realmatchups.add(new Matchup(teamsA.get(3), teamsB.get(0)));
+        realmatchups.add(new Matchup(teamsA.get(0), teamsB.get(2)));
+        realmatchups.add(new Matchup(teamsB.get(3), teamsA.get(2)));
+        realmatchups.add(new Matchup(teamsA.get(1), teamsB.get(1)));
+        realmatchups.add(new Matchup(teamsB.get(4), teamsA.get(4)));
+        
+        
+        // GROUP B LEFT
 	}
 }

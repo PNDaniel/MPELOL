@@ -27,3 +27,17 @@ Group A Matches on Spring Split 2017:
 10FR2- MSF vs GIA
 10SA2- G2E vs ROC
 10SU2- FNC vs MSF
+
+
+
+ 		/*teamsA.add(new Team("G2ESPORTS", 50));   // Team 0 - teams.get(0)
+        * teamsA.add(new Team("MISFITS", 30));     // Team 1 - teams.get(1)
+        * teamsA.add(new Team("ROCCAT", 20));      // Team 2 - teams.get(2)
+        * teamsA.add(new Team("FNATIC", 50));      // Team 3 - teams.get(3)
+        * teamsA.add(new Team("GIANTS", 10));      // Team 4 - teams.get(4)
+        */
+         teamsB.add(new Team("UNICORNS OF LOVE", 50));   // Team 0 - teams.get(0)
+         teamsB.add(new Team("H2K-GAMING", 40));         // Team 1 - teams.get(1)
+         teamsB.add(new Team("SPLYCE", 30));             // Team 2 - teams.get(2)
+         teamsB.add(new Team("VITALIY", 30));            // Team 3 - teams.get(3)
+         teamsB.add(new Team("ORIGEN", 30));             // Team 4 - teams.get(4)
